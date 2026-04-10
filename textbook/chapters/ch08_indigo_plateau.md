@@ -1,5 +1,14 @@
 # Chapter 8: Indigo Plateau & Beyond --- Advanced Topics & Frontiers
 
+<!-- FIG-CH08-ELITE4 -->
+<div style="display:flex; gap:8px; justify-content:center; margin:1em 0;">
+<figure><img src="../../assets/characters/lorelei.png" style="width:90px;"><figcaption>Lorelei</figcaption></figure>
+<figure><img src="../../assets/characters/bruno.png" style="width:90px;"><figcaption>Bruno</figcaption></figure>
+<figure><img src="../../assets/characters/agatha.png" style="width:90px;"><figcaption>Agatha</figcaption></figure>
+<figure><img src="../../assets/characters/lance.png" style="width:90px;"><figcaption>Lance</figcaption></figure>
+</div>
+
+
 ---
 
 *The road from Viridian City narrows into a winding mountain path. Rock walls rise on either side, and the air grows colder with every step. Behind you lies the entire Kanto region --- eight Gym Badges earned, each one representing a different tool in your causal inference arsenal. Potential outcomes. Randomized experiments. DAGs and d-separation. Matching and propensity scores. Regression and doubly robust estimation. Instrumental variables and regression discontinuity. Difference-in-differences and synthetic control.*
@@ -15,6 +24,13 @@
 ---
 
 ## 8.1 Mediation Analysis: Lorelei's Ice Chamber
+
+<!-- FIG-CH08-MED -->
+<figure>
+<img src="../../assets/diagrams/dag_mediation.png" alt="Mediation: total effect = direct (NDE) + indirect through M (NIE)." style="width:70%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>Mediation: total effect = direct (NDE) + indirect through M (NIE).</figcaption>
+</figure>
+
 
 *The chamber is cold. Ice crystals hang from the ceiling, refracting light into prismatic arcs. Lorelei sits on a throne of frozen stalagmites, a Dewgong resting at her side. She adjusts her glasses and studies you.*
 
@@ -765,6 +781,13 @@ The optimal dynamic regime, estimated via Q-learning, prescribes: use items befo
 
 ## 8.11 The Champion Battle: Blue's Causal Fallacies
 
+<!-- FIG-CH08-BLUE -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/blue.png" alt="Rival Blue, the Champion" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Rival Blue, the Champion</figcaption>
+</figure>
+
+
 *You step through the final door and into a blaze of light. The Champion's chamber is a grand arena, cameras flashing, a crowd roaring. And there, standing at the far end with his arms crossed and that infuriating smirk, is Blue.*
 
 *"So you made it," he says. "But can you beat me? I've studied the data. I know everything about causation."*
@@ -910,6 +933,20 @@ What if we have **proxies** for unobserved confounders, even though we do not ob
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH08-CHAMPION -->
+<div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:1.5em 0;">
+<img src="../../assets/badges/boulder_badge.png" alt="Boulder" style="width:80px;">
+<img src="../../assets/badges/cascade_badge.png" alt="Cascade" style="width:80px;">
+<img src="../../assets/badges/thunder_badge.png" alt="Thunder" style="width:80px;">
+<img src="../../assets/badges/rainbow_badge.png" alt="Rainbow" style="width:80px;">
+<img src="../../assets/badges/soul_badge.png" alt="Soul" style="width:80px;">
+<img src="../../assets/badges/marsh_badge.png" alt="Marsh" style="width:80px;">
+<img src="../../assets/badges/volcano_badge.png" alt="Volcano" style="width:80px;">
+<img src="../../assets/badges/earth_badge.png" alt="Earth" style="width:80px;">
+</div>
+<p style="text-align:center; font-weight:bold; color:#EE1515;">Champion! All eight badges earned.</p>
+
 
 This chapter --- the capstone of your Kanto journey --- surveyed the frontier of causal inference, organized around the Elite Four gauntlet:
 

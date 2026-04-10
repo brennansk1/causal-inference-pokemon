@@ -1,5 +1,19 @@
 # Chapter 1: Pallet Town --- What Is Causal Inference?
 
+<!-- FIG-CH01-OAK -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/oak.png" alt="Professor Oak" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Professor Oak</figcaption>
+</figure>
+
+
+<!-- FIG-CH01-MAP -->
+<figure>
+<img src="../../assets/maps/kanto_map.png" alt="The Kanto region — your journey begins in Pallet Town." style="width:75%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>The Kanto region — your journey begins in Pallet Town.</figcaption>
+</figure>
+
+
 ---
 
 *You wake up in a small house at the edge of a quiet town. Sunlight filters through the curtains. Downstairs, your mother is watching the morning news --- something about a new discovery on Route 1. Today is the day you've been waiting for: Professor Oak has invited you to his laboratory to receive your first Pokemon. As you step outside, the cool Pallet Town air carries the sound of an argument drifting from the road ahead.*

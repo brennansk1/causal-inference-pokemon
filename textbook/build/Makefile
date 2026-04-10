@@ -79,7 +79,7 @@ PANDOC_HTML := \
 # ---------------------------------------------------------------------------
 # Targets
 # ---------------------------------------------------------------------------
-.PHONY: all pdf html weasy clean
+.PHONY: all pdf html weasy release-pdf clean
 
 all: pdf html
 
@@ -87,7 +87,7 @@ pdf: $(PDF_OUT)
 
 html: $(HTML_OUT)
 
-# Weasyprint-based PDF build (no LaTeX required)
+# Weasyprint/Chrome-based PDF build (no LaTeX required)
 weasy: $(WEASY_PDF_OUT)
 
 $(OUTPUT_DIR):
@@ -104,21 +104,42 @@ $(HTML_OUT): $(CHAPTERS) $(BIB_FILE) | $(OUTPUT_DIR)
 	@echo "==> HTML written to $@"
 
 # Weasyprint-based PDF: produce a styled single-file HTML, then convert with weasyprint
-$(WEASY_HTML): $(ALL_CONTENT) $(CSS_FILE) | $(OUTPUT_DIR)
+# Falls back to Chrome headless if weasyprint native libs are not installed.
+$(WEASY_HTML): $(CHAPTERS) $(APPENDICES) $(CSS_FILE) $(BUILD_DIR)/title.html | $(OUTPUT_DIR)
 	@echo "==> Building styled HTML for PDF..."
 	$(PANDOC) \
-		--from=markdown+smart+yaml_metadata_block+tex_math_dollars+footnotes \
+		--from=markdown+smart+tex_math_dollars+footnotes \
 		--standalone --embed-resources \
 		--css=$(CSS_FILE) \
 		--mathjax \
 		--toc --toc-depth=2 \
+		--resource-path=.:$(CHAPTER_DIR):$(ASSETS_DIR) \
+		--include-before-body=$(BUILD_DIR)/title.html \
 		--metadata title="Causal Inference: A Pokemon Approach" \
-		-o $@ $(ALL_CONTENT)
+		-o $@ $(CHAPTERS) $(APPENDICES)
 
 $(WEASY_PDF_OUT): $(WEASY_HTML)
-	@echo "==> Converting HTML to PDF with weasyprint..."
-	weasyprint $(WEASY_HTML) $(WEASY_PDF_OUT)
+	@echo "==> Converting HTML to PDF..."
+	@if command -v weasyprint >/dev/null 2>&1; then \
+		echo "  Using weasyprint"; \
+		weasyprint $(WEASY_HTML) $(WEASY_PDF_OUT); \
+	elif [ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]; then \
+		echo "  Using Chrome headless (weasyprint not found)"; \
+		"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+			--headless --disable-gpu --no-pdf-header-footer \
+			--virtual-time-budget=30000 \
+			--print-to-pdf="$$PWD/$(WEASY_PDF_OUT)" \
+			"file://$$PWD/$(WEASY_HTML)"; \
+	else \
+		echo "  ERROR: neither weasyprint nor Chrome headless available"; \
+		exit 1; \
+	fi
 	@echo "==> PDF written to $@"
+
+# Convenience: build the PDF and copy to the release location
+release-pdf: $(WEASY_PDF_OUT)
+	cp $(WEASY_PDF_OUT) ../Causal_Inference_Pokemon.pdf
+	@echo "==> Release PDF: textbook/Causal_Inference_Pokemon.pdf"
 
 clean:
 	@echo "==> Cleaning build artefacts..."

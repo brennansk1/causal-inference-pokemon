@@ -1,5 +1,12 @@
 # Chapter 5: Celadon City — Regression, Weighting, & Doubly Robust Methods
 
+<!-- FIG-CH05-ERIKA -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/erika.png" alt="Erika, Celadon Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Erika, Celadon Gym Leader</figcaption>
+</figure>
+
+
 > *"Celadon City — the city of rainbow dreams."*
 
 Celadon City is the commercial heart of Kanto. The Department Store towers above the skyline, its six floors stocked with everything a trainer could desire: TMs for new battle moves, stat-boosting vitamins like Calcium and Iron, evolution stones, and the coveted Rare Candy. Trainers flock here from across the region, wallets open, convinced that spending more on premium items will transform them into Pokemon League champions.
@@ -233,6 +240,13 @@ Since $\delta \approx 0.156 < 1$, this tells us that even unobservables that are
 ---
 
 ## 5.3 Bad Controls and Post-Treatment Bias
+
+<!-- FIG-CH05-BAD -->
+<figure>
+<img src="../../assets/diagrams/dag_bad_control.png" alt="Controlling for a post-treatment variable blocks the causal pathway." style="width:70%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>Controlling for a post-treatment variable blocks the causal pathway.</figcaption>
+</figure>
+
 
 ### 5.3.1 The Most Common Mistake
 
@@ -683,6 +697,13 @@ For applied researchers, we offer the following guidance:
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH05-BADGE -->
+<figure style="text-align:center; margin:1.5em auto;">
+<img src="../../assets/badges/rainbow_badge.png" alt="Rainbow Badge" style="width:140px; display:block; margin:0 auto;">
+<figcaption><strong>Rainbow Badge earned!</strong></figcaption>
+</figure>
+
 
 In this chapter, we developed three progressively more sophisticated tools for estimating causal effects from observational data:
 

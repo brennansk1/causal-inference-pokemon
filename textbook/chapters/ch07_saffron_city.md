@@ -1,5 +1,12 @@
 # Chapter 7: Saffron City --- Difference-in-Differences & Synthetic Controls
 
+<!-- FIG-CH07-SABRINA -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/sabrina.png" alt="Sabrina, Saffron Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Sabrina, Saffron Gym Leader</figcaption>
+</figure>
+
+
 > *"Saffron City stands at the crossroads of Kanto --- and at the crossroads of causal inference. When treatment rolls out across time and space, the researcher must think carefully about what constitutes a valid comparison. The methods in this chapter exploit the panel structure of data to identify causal effects when randomization is impossible."*
 > --- Professor Oak, *Lectures on Kanto Econometrics*
 
@@ -16,6 +23,13 @@ Let us begin.
 ---
 
 ## 7.1 Difference-in-Differences: The Classic 2x2 Design
+
+<!-- FIG-CH07-DID -->
+<figure>
+<img src="../../assets/diagrams/did_parallel_trends.png" alt="Difference-in-differences with parallel trends and a counterfactual." style="width:85%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>Difference-in-differences with parallel trends and a counterfactual.</figcaption>
+</figure>
+
 
 ### The Setup
 
@@ -702,6 +716,13 @@ This method is useful in settings where neither RDD alone (because the cutoff ch
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH07-BADGE -->
+<figure style="text-align:center; margin:1.5em auto;">
+<img src="../../assets/badges/marsh_badge.png" alt="Marsh Badge" style="width:140px; display:block; margin:0 auto;">
+<figcaption><strong>Marsh Badge earned!</strong></figcaption>
+</figure>
+
 
 This chapter covered the family of methods that exploit **panel data** --- repeated observations on the same units over time --- to identify causal effects. We began with the classic **2x2 difference-in-differences** design, which eliminates time-invariant confounders (via within-unit differencing) and common time trends (via cross-group differencing) to isolate treatment effects. The parallel trends assumption --- that treated and control units would have followed the same trajectory absent treatment --- is the key identifying assumption, and while it is fundamentally untestable, event study plots provide crucial diagnostic evidence.
 

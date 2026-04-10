@@ -33,10 +33,8 @@ textbook/build/output/
 textbook/figures/*.png
 textbook/figures/*.pdf
 
-# Downloaded assets (fetched via scripts)
-assets/sprites/front/*.png
-assets/sprites/icons/*.png
-assets/maps/kanto_chapter_map.png
+# Visual assets (sprites, badges, characters, diagrams) ARE tracked.
+# The download/upscale scripts in assets/ regenerate them from open sources.
 
 # Data (regenerated via scripts)
 # Note: we DO track data/raw/ for convenience, but you can regenerate with:

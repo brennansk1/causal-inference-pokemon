@@ -1,5 +1,12 @@
 # Chapter 3: Cerulean City — Observational Studies & Graphical Models
 
+<!-- FIG-CH03-MISTY -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/misty.png" alt="Misty, Cerulean Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Misty, Cerulean Gym Leader</figcaption>
+</figure>
+
+
 > *"Water is patient. It doesn't force its way through rock — it finds the path that already exists."*
 > — Misty, Cerulean City Gym Leader
 
@@ -459,6 +466,13 @@ Formally, acyclicity means there is a **topological ordering** of the nodes — 
 
 ## 3.6 Chains, Forks, and Colliders
 
+<!-- FIG-CH03-THREE -->
+<figure>
+<img src="../../assets/diagrams/dag_three_structures.png" alt="The three atomic DAG structures: fork, chain, and collider." style="width:85%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>The three atomic DAG structures: fork, chain, and collider.</figcaption>
+</figure>
+
+
 Bill settles into a chair and pulls out three small diagrams — the three fundamental building blocks of all DAGs. "Every DAG, no matter how complex, is made up of just three types of path structures," he says. "Master these three, and you can read any DAG."
 
 ### The Three Elemental Structures
@@ -611,6 +625,13 @@ This asymmetry is the engine of d-separation. Conditioning can **close** paths (
 ---
 
 ## 3.7 d-Separation and the Backdoor Criterion
+
+<!-- FIG-CH03-DAG -->
+<figure>
+<img src="../../assets/diagrams/dag_kanto_trainer.png" alt="The Kanto Trainer DAG (latent vs observed nodes)." style="width:75%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>The Kanto Trainer DAG (latent vs observed nodes).</figcaption>
+</figure>
+
 
 Armed with the three building blocks, Bill leads you to the most powerful tool in the graphical causal inference toolkit: **d-separation**. "This," Bill says, "is the algorithm that tells you whether your statistical analysis will give you a causal answer — or garbage."
 
@@ -945,6 +966,13 @@ The practical implication is both empowering and humbling:
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH03-BADGE -->
+<figure style="text-align:center; margin:1.5em auto;">
+<img src="../../assets/badges/cascade_badge.png" alt="Cascade Badge" style="width:140px; display:block; margin:0 auto;">
+<figcaption><strong>Cascade Badge earned!</strong></figcaption>
+</figure>
+
 
 You leave Bill's cottage as the sun sets over the Cape, the orange light glinting off the water. You came to Cerulean City with a naive comparison of means. You leave with a toolkit for reading the causal structure of the world.
 

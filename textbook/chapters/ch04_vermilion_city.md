@@ -1,5 +1,12 @@
 # Chapter 4: Vermilion City — Matching & Subclassification
 
+<!-- FIG-CH04-SURGE -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/surge.png" alt="Lt. Surge, Vermilion Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Lt. Surge, Vermilion Gym Leader</figcaption>
+</figure>
+
+
 > *"The best trainers don't just fight hard — they find the right opponent to learn from."*
 > — Lt. Surge, Vermilion City Gym Leader
 
@@ -675,6 +682,13 @@ These limitations of matching are not reasons to abandon it. Matching remains on
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH04-BADGE -->
+<figure style="text-align:center; margin:1.5em auto;">
+<img src="../../assets/badges/thunder_badge.png" alt="Thunder Badge" style="width:140px; display:block; margin:0 auto;">
+<figcaption><strong>Thunder Badge earned!</strong></figcaption>
+</figure>
+
 
 In this chapter, we explored the family of matching methods for causal inference in observational studies, using the S.S. Anne Thunder Training study as our running example.
 

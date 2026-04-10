@@ -1,5 +1,12 @@
 # Chapter 6: Fuchsia City & Cinnabar Island — Instrumental Variables & Regression Discontinuity
 
+<!-- FIG-CH06-KOGA -->
+<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
+<img src="../../assets/characters/koga.png" alt="Koga, Fuchsia Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em; text-align:center;">Koga, Fuchsia Gym Leader</figcaption>
+</figure>
+
+
 > *"Sometimes the path forward is not straight. The Safari Zone lottery ticket in your pocket and the happiness meter on your Pokedex — these indirect tools are your keys to causal truth."*
 > — Professor Oak
 
@@ -24,6 +31,13 @@ Let us begin.
 ---
 
 ## 6.1 The Instrumental Variables Idea
+
+<!-- FIG-CH06-IV -->
+<figure>
+<img src="../../assets/diagrams/dag_iv.png" alt="Instrumental variables: Z affects Y only through D." style="width:70%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>Instrumental variables: Z affects Y only through D.</figcaption>
+</figure>
+
 
 ### The Problem: Unobserved Confounding
 
@@ -448,6 +462,13 @@ The ITT of 8 percentage points equals the LATE of 19 percentage points times the
 
 ## 6.5 Sharp Regression Discontinuity Design
 
+<!-- FIG-CH06-RDD -->
+<figure>
+<img src="../../assets/diagrams/rdd_evolution.png" alt="Sharp Regression Discontinuity at the evolution threshold." style="width:80%; max-width:520px; display:block; margin:1em auto;">
+<figcaption>Sharp Regression Discontinuity at the evolution threshold.</figcaption>
+</figure>
+
+
 ### The Setting
 
 On Cinnabar Island, researchers have assembled the `happiness_evolution.csv` dataset tracking Pokemon and their trainers. Each Pokemon has a **happiness score** — a continuous measure from 0 to 255 based on time spent with the trainer, battles fought, items used, and other factors. The game mechanics dictate that when a Pokemon's happiness reaches 220, it evolves.
@@ -786,6 +807,13 @@ RDiT is related to but distinct from difference-in-differences (Chapter 7). DiD 
 ---
 
 ## Chapter Summary
+
+<!-- FIG-CH06-BADGE -->
+<div style="display:flex; gap:24px; justify-content:center; margin:1.5em 0;">
+<figure><img src="../../assets/badges/soul_badge.png" style="width:120px;"><figcaption><strong>Soul Badge!</strong></figcaption></figure>
+<figure><img src="../../assets/badges/volcano_badge.png" style="width:120px;"><figcaption><strong>Volcano Badge!</strong></figcaption></figure>
+</div>
+
 
 ### Part I: Instrumental Variables
 
