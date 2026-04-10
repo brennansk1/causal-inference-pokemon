@@ -1,0 +1,274 @@
+/* Causal Inference: A Pokemon Approach — PDF stylesheet */
+
+@page {
+    size: A4;
+    margin: 2.5cm 2.2cm 2.5cm 2.2cm;
+    @bottom-center {
+        content: counter(page);
+        font-family: 'Georgia', serif;
+        font-size: 10pt;
+        color: #666;
+    }
+    @top-center {
+        content: string(chapter-title);
+        font-family: 'Georgia', serif;
+        font-size: 9pt;
+        color: #888;
+        font-style: italic;
+    }
+}
+
+@page :first {
+    @top-center { content: ""; }
+    @bottom-center { content: ""; }
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #222;
+    text-align: justify;
+    hyphens: auto;
+}
+
+/* Title page */
+.titlepage {
+    page-break-after: always;
+    text-align: center;
+    padding-top: 3cm;
+}
+
+/* Table of contents */
+#TOC, nav[role="doc-toc"] {
+    page-break-before: always;
+    page-break-after: always;
+}
+
+#TOC h1, nav[role="doc-toc"] h1, .toc-title {
+    color: #EE1515;
+    border-bottom: 3px solid #EE1515;
+    font-size: 26pt;
+    padding-bottom: 6px;
+}
+
+#TOC ul, nav[role="doc-toc"] ul {
+    list-style: none;
+    padding-left: 16pt;
+}
+
+#TOC a, nav[role="doc-toc"] a {
+    color: #3B4CCA;
+    text-decoration: none;
+}
+
+/* Chapter starts always on a new page */
+h1[id^="chapter"], h1[id^="ch0"], h1[id^="ch1"],
+h1[id^="appendix"], h1[id^="chapter-"] {
+    page-break-before: always;
+}
+
+.titlepage h1 {
+    font-size: 48pt;
+    color: #EE1515;
+    margin-bottom: 0;
+    font-weight: bold;
+    border: none;
+}
+
+.titlepage h2 {
+    font-size: 28pt;
+    color: #3B4CCA;
+    margin-top: 8px;
+    border: none;
+}
+
+.titlepage h3 {
+    font-size: 18pt;
+    color: #555;
+    font-style: italic;
+    margin-top: 24px;
+    border: none;
+}
+
+.titlepage hr {
+    border: none;
+    border-top: 2px solid #EE1515;
+    margin: 32px auto;
+    width: 50%;
+}
+
+/* Headings */
+h1 {
+    font-size: 26pt;
+    color: #EE1515;
+    border-bottom: 3px solid #EE1515;
+    padding-bottom: 6px;
+    margin-top: 36pt;
+    margin-bottom: 18pt;
+    page-break-before: always;
+    string-set: chapter-title content();
+}
+
+h1:first-of-type {
+    page-break-before: avoid;
+}
+
+h2 {
+    font-size: 18pt;
+    color: #3B4CCA;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+    margin-top: 24pt;
+    margin-bottom: 10pt;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 14pt;
+    color: #222;
+    margin-top: 18pt;
+    margin-bottom: 8pt;
+    page-break-after: avoid;
+}
+
+h4 {
+    font-size: 12pt;
+    color: #444;
+    font-style: italic;
+    margin-top: 12pt;
+    page-break-after: avoid;
+}
+
+/* Paragraphs */
+p {
+    margin: 6pt 0;
+    orphans: 3;
+    widows: 3;
+}
+
+/* Math — rendered via MathJax in HTML step */
+.MathJax, mjx-container {
+    font-size: 110%;
+}
+
+/* Code */
+code {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 9pt;
+    background: #f4f4f4;
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+pre {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 8.5pt;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-left: 4px solid #3B4CCA;
+    padding: 10px 12px;
+    line-height: 1.35;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
+}
+
+pre code {
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+}
+
+/* Blockquotes — used for callouts */
+blockquote {
+    border-left: 4px solid #4DAD5B;
+    background: #f0f8f0;
+    padding: 10px 16px;
+    margin: 12pt 0;
+    font-style: italic;
+    color: #2c4a2c;
+    page-break-inside: avoid;
+}
+
+blockquote p {
+    margin: 4pt 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    margin: 12pt auto;
+    font-size: 10pt;
+    page-break-inside: avoid;
+    width: 100%;
+}
+
+th {
+    background: #EE1515;
+    color: white;
+    padding: 6px 10px;
+    border: 1px solid #c41212;
+    text-align: left;
+}
+
+td {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+/* Lists */
+ul, ol {
+    margin: 6pt 0 6pt 18pt;
+}
+
+li {
+    margin: 3pt 0;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 18pt 0;
+}
+
+/* Links */
+a {
+    color: #3B4CCA;
+    text-decoration: none;
+}
+
+/* Emphasis */
+em, i {
+    font-style: italic;
+}
+
+strong, b {
+    font-weight: bold;
+    color: #111;
+}
+
+/* Figure */
+figure {
+    text-align: center;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+}
+
+figcaption {
+    font-size: 9pt;
+    color: #666;
+    font-style: italic;
+    margin-top: 4pt;
+}
+
+/* Division between chapters */
+.chapter-divider {
+    page-break-before: always;
+}

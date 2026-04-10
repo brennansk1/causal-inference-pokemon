@@ -1,0 +1,305 @@
+% =============================================================================
+% template.tex -- Custom Pandoc LaTeX template for
+% "Causal Inference: A Pokemon Approach"
+% =============================================================================
+%
+% This template is designed for XeLaTeX.  It provides:
+%   - Kanto-themed colour palette (red / blue / yellow)
+%   - Professional textbook layout with margin notes
+%   - Styled chapter headings
+%   - Callout / info / warning boxes
+%   - Bibliography and cross-reference support
+% =============================================================================
+
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+
+% ---------------------------------------------------------------------------
+% Packages
+% ---------------------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{longtable,booktabs,array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{fancyhdr}
+\usepackage{marginnote}
+\usepackage{mdframed}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{microtype}
+\usepackage{csquotes}
+\usepackage{etoolbox}
+
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
+
+% ---------------------------------------------------------------------------
+% Kanto colour palette
+% ---------------------------------------------------------------------------
+\definecolor{KantoRed}{HTML}{E3350D}
+\definecolor{KantoBlue}{HTML}{2A75BB}
+\definecolor{KantoYellow}{HTML}{FFCB05}
+\definecolor{KantoGreen}{HTML}{4DAD5B}
+\definecolor{KantoGray}{HTML}{6B7280}
+\definecolor{KantoLightGray}{HTML}{F3F4F6}
+\definecolor{KantoDark}{HTML}{1F2937}
+\definecolor{KantoGhost}{HTML}{705898}
+\definecolor{KantoWater}{HTML}{6890F0}
+\definecolor{KantoFire}{HTML}{F08030}
+\definecolor{KantoGrass}{HTML}{78C850}
+
+% ---------------------------------------------------------------------------
+% Hyperref setup
+% ---------------------------------------------------------------------------
+\hypersetup{
+  $if(title-meta)$pdftitle={$title-meta$},$endif$
+  $if(author-meta)$pdfauthor={$author-meta$},$endif$
+  colorlinks=true,
+  linkcolor=$if(linkcolor)$$linkcolor$$else$KantoRed$endif$,
+  citecolor=$if(citecolor)$$citecolor$$else$KantoBlue$endif$,
+  urlcolor=$if(urlcolor)$$urlcolor$$else$KantoBlue$endif$,
+  breaklinks=true,
+  pdfcreator={Pandoc + XeLaTeX},
+}
+
+% ---------------------------------------------------------------------------
+% Chapter & section styling
+% ---------------------------------------------------------------------------
+
+% Chapter title: large bold with KantoRed rule
+\titleformat{\chapter}[display]
+  {\normalfont\Huge\bfseries\color{KantoDark}}
+  {\flushright\fontsize{72}{72}\selectfont\color{KantoRed!30}\thechapter}
+  {20pt}
+  {\Huge\color{KantoDark}#1%
+   \vspace{6pt}%
+   {\color{KantoRed}\titlerule[2pt]}}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{KantoDark}}
+  {\thesection}{1em}{}
+  [{\color{KantoBlue}\titlerule[0.8pt]}]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{KantoDark}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{KantoGray}}
+  {\thesubsubsection}{1em}{}
+
+% ---------------------------------------------------------------------------
+% Headers and footers
+% ---------------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[RO]{\small\itshape\nouppercase{\rightmark}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Plain style for chapter opening pages
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\small\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% ---------------------------------------------------------------------------
+% Callout boxes  (usage: \begin{pokebox}{Title} ... \end{pokebox})
+% ---------------------------------------------------------------------------
+
+% Pokemon-themed info box (blue)
+\newmdenv[
+  backgroundcolor=KantoBlue!8,
+  linecolor=KantoBlue,
+  linewidth=2pt,
+  roundcorner=4pt,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=12pt,
+  innerrightmargin=12pt,
+  skipabove=12pt,
+  skipbelow=12pt,
+  frametitle={},
+  frametitlefont=\bfseries\color{KantoBlue},
+  frametitleaboveskip=6pt,
+]{pokebox}
+
+% Warning / caution box (red)
+\newmdenv[
+  backgroundcolor=KantoRed!8,
+  linecolor=KantoRed,
+  linewidth=2pt,
+  roundcorner=4pt,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=12pt,
+  innerrightmargin=12pt,
+  skipabove=12pt,
+  skipbelow=12pt,
+  frametitle={},
+  frametitlefont=\bfseries\color{KantoRed},
+  frametitleaboveskip=6pt,
+]{warnbox}
+
+% Key concept box (yellow)
+\newmdenv[
+  backgroundcolor=KantoYellow!15,
+  linecolor=KantoYellow!80!black,
+  linewidth=2pt,
+  roundcorner=4pt,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=12pt,
+  innerrightmargin=12pt,
+  skipabove=12pt,
+  skipbelow=12pt,
+  frametitle={},
+  frametitlefont=\bfseries\color{KantoYellow!80!black},
+  frametitleaboveskip=6pt,
+]{conceptbox}
+
+% Example box (green)
+\newmdenv[
+  backgroundcolor=KantoGreen!8,
+  linecolor=KantoGreen,
+  linewidth=2pt,
+  roundcorner=4pt,
+  innertopmargin=10pt,
+  innerbottommargin=10pt,
+  innerleftmargin=12pt,
+  innerrightmargin=12pt,
+  skipabove=12pt,
+  skipbelow=12pt,
+  frametitle={},
+  frametitlefont=\bfseries\color{KantoGreen!80!black},
+  frametitleaboveskip=6pt,
+]{examplebox}
+
+% ---------------------------------------------------------------------------
+% Margin notes
+% ---------------------------------------------------------------------------
+\newcommand{\pokemargin}[1]{%
+  \marginnote{\footnotesize\color{KantoGray}#1}%
+}
+
+% ---------------------------------------------------------------------------
+% Code listings
+% ---------------------------------------------------------------------------
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+% ---------------------------------------------------------------------------
+% Images / figures
+% ---------------------------------------------------------------------------
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Tight list support (Pandoc)
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% ---------------------------------------------------------------------------
+% Title page
+% ---------------------------------------------------------------------------
+
+$if(title)$
+\title{%
+  \vspace{2cm}%
+  {\fontsize{36}{42}\selectfont\bfseries\color{KantoDark}$title$}%
+  $if(subtitle)$\\[12pt]{\fontsize{18}{24}\selectfont\color{KantoGray}$subtitle$}$endif$%
+  \\[2cm]%
+  {\color{KantoRed}\rule{\textwidth}{3pt}}%
+  \\[1cm]%
+  {\Large\color{KantoBlue}\textit{Gotta Infer 'Em All}}%
+}
+$endif$
+
+$if(author)$
+\author{%
+  $for(author)$$author$$sep$ \and $endfor$%
+}
+$endif$
+
+\date{$if(date)$$date$$else$\today$endif$}
+
+% ---------------------------------------------------------------------------
+% Document
+% ---------------------------------------------------------------------------
+\begin{document}
+
+$if(title)$
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\fontsize{42}{50}\selectfont\bfseries\color{KantoDark}$title$\par}
+\vspace{0.5cm}
+$if(subtitle)$
+{\fontsize{18}{24}\selectfont\color{KantoGray}$subtitle$\par}
+\vspace{0.5cm}
+$endif$
+{\color{KantoRed}\rule{0.6\textwidth}{3pt}\par}
+\vspace{1cm}
+{\Large\color{KantoBlue}\textit{Gotta Infer 'Em All}\par}
+\vspace{2cm}
+$if(author)$
+{\Large
+$for(author)$$author$$sep$ \\ $endfor$
+\par}
+$endif$
+\vfill
+{\large $if(date)$$date$$else$\today$endif$\par}
+\end{titlepage}
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(toc)$
+{
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+\newpage
+}
+$endif$
+
+$if(lot)$\listoftables\newpage$endif$
+$if(lof)$\listoffigures\newpage$endif$
+
+$body$
+
+$if(natbib)$
+$if(bibliography)$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$endif$
+$endif$
+
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+\end{document}

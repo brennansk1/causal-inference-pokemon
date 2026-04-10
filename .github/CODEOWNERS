@@ -1,0 +1,19 @@
+# CODEOWNERS
+# These owners are automatically requested for review when a PR touches the matching paths.
+
+# Default owner — all files require at least one review
+* @brennansk1
+
+# Statistical estimators need careful review
+/src/kanto_utils/causal.py @brennansk1
+/data/dgp/ @brennansk1
+/tests/test_causal.py @brennansk1
+
+# Textbook content
+/textbook/chapters/ @brennansk1
+/textbook/build/ @brennansk1
+
+# CI / infrastructure
+/.github/ @brennansk1
+/pyproject.toml @brennansk1
+/requirements.txt @brennansk1

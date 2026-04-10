@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 *.egg-info/
 dist/
-build/
+/build/
 *.egg
 .eggs/
 
@@ -28,9 +28,8 @@ env/
 .DS_Store
 Thumbs.db
 
-# Build artifacts
-textbook/build/*.pdf
-textbook/build/*.html
+# Build artifacts (the release PDF lives in textbook/ directly and IS tracked)
+textbook/build/output/
 textbook/figures/*.png
 textbook/figures/*.pdf
 
