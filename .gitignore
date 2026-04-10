@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_metadata/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+textbook/build/*.pdf
+textbook/build/*.html
+textbook/figures/*.png
+textbook/figures/*.pdf
+
+# Downloaded assets (fetched via scripts)
+assets/sprites/front/*.png
+assets/sprites/icons/*.png
+assets/maps/kanto_chapter_map.png
+
+# Data (regenerated via scripts)
+# Note: we DO track data/raw/ for convenience, but you can regenerate with:
+#   python data/dgp/generate_all.py
+
+# Secrets
+.env
+*.key

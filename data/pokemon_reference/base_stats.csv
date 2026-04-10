@@ -1,0 +1,152 @@
+pokedex_id,name,type_primary,bst,tier
+1,Bulbasaur,Grass,318,Weak
+2,Ivysaur,Grass,405,Average
+3,Venusaur,Grass,525,Strong
+4,Charmander,Fire,309,Weak
+5,Charmeleon,Fire,405,Average
+6,Charizard,Fire,534,Strong
+7,Squirtle,Water,314,Weak
+8,Wartortle,Water,405,Average
+9,Blastoise,Water,530,Strong
+10,Caterpie,Bug,195,Very Weak
+11,Metapod,Bug,205,Very Weak
+12,Butterfree,Bug,395,Weak
+13,Weedle,Bug,195,Very Weak
+14,Kakuna,Bug,205,Very Weak
+15,Beedrill,Bug,395,Weak
+16,Pidgey,Normal,251,Very Weak
+17,Pidgeotto,Normal,349,Weak
+18,Pidgeot,Normal,479,Average
+19,Rattata,Normal,253,Very Weak
+20,Raticate,Normal,413,Average
+21,Spearow,Normal,262,Very Weak
+22,Fearow,Normal,442,Average
+23,Ekans,Poison,288,Very Weak
+24,Arbok,Poison,448,Average
+25,Pikachu,Electric,320,Weak
+26,Raichu,Electric,485,Average
+27,Sandshrew,Ground,300,Weak
+28,Sandslash,Ground,450,Average
+29,Nidoran_F,Poison,275,Very Weak
+30,Nidorina,Poison,365,Weak
+31,Nidoqueen,Poison,505,Strong
+32,Nidoran_M,Poison,273,Very Weak
+33,Nidorino,Poison,365,Weak
+34,Nidoking,Poison,505,Strong
+35,Clefairy,Fairy,323,Weak
+36,Clefable,Fairy,483,Average
+37,Vulpix,Fire,299,Very Weak
+38,Ninetales,Fire,505,Strong
+39,Jigglypuff,Normal,270,Very Weak
+40,Wigglytuff,Normal,435,Average
+41,Zubat,Poison,245,Very Weak
+42,Golbat,Poison,455,Average
+43,Oddish,Grass,320,Weak
+44,Gloom,Grass,395,Weak
+45,Vileplume,Grass,490,Average
+46,Paras,Bug,285,Very Weak
+47,Parasect,Bug,405,Average
+48,Venonat,Bug,305,Weak
+49,Venomoth,Bug,450,Average
+50,Diglett,Ground,265,Very Weak
+51,Dugtrio,Ground,425,Average
+52,Meowth,Normal,290,Very Weak
+53,Persian,Normal,440,Average
+54,Psyduck,Water,320,Weak
+55,Golduck,Water,500,Strong
+56,Mankey,Fighting,305,Weak
+57,Primeape,Fighting,455,Average
+58,Growlithe,Fire,350,Weak
+59,Arcanine,Fire,555,Strong
+60,Poliwag,Water,300,Weak
+61,Poliwhirl,Water,385,Weak
+62,Poliwrath,Water,510,Strong
+63,Abra,Psychic,310,Weak
+64,Kadabra,Psychic,400,Average
+65,Alakazam,Psychic,500,Strong
+66,Machop,Fighting,305,Weak
+67,Machoke,Fighting,405,Average
+68,Machamp,Fighting,505,Strong
+69,Bellsprout,Grass,300,Weak
+70,Weepinbell,Grass,390,Weak
+71,Victreebel,Grass,490,Average
+72,Tentacool,Water,335,Weak
+73,Tentacruel,Water,515,Strong
+74,Geodude,Rock,300,Weak
+75,Graveler,Rock,390,Weak
+76,Golem,Rock,495,Average
+77,Ponyta,Fire,410,Average
+78,Rapidash,Fire,500,Strong
+79,Slowpoke,Water,315,Weak
+80,Slowbro,Water,490,Average
+81,Magnemite,Electric,325,Weak
+82,Magneton,Electric,465,Average
+83,Farfetchd,Normal,377,Weak
+84,Doduo,Normal,310,Weak
+85,Dodrio,Normal,470,Average
+86,Seel,Water,325,Weak
+87,Dewgong,Water,475,Average
+88,Grimer,Poison,325,Weak
+89,Muk,Poison,500,Strong
+90,Shellder,Water,305,Weak
+91,Cloyster,Water,525,Strong
+92,Gastly,Ghost,310,Weak
+93,Haunter,Ghost,405,Average
+94,Gengar,Ghost,500,Strong
+95,Onix,Rock,385,Weak
+96,Drowzee,Psychic,328,Weak
+97,Hypno,Psychic,483,Average
+98,Krabby,Water,325,Weak
+99,Kingler,Water,475,Average
+100,Voltorb,Electric,330,Weak
+101,Electrode,Electric,490,Average
+102,Exeggcute,Grass,325,Weak
+103,Exeggutor,Grass,530,Strong
+104,Cubone,Ground,320,Weak
+105,Marowak,Ground,425,Average
+106,Hitmonlee,Fighting,455,Average
+107,Hitmonchan,Fighting,455,Average
+108,Lickitung,Normal,385,Weak
+109,Koffing,Poison,340,Weak
+110,Weezing,Poison,490,Average
+111,Rhyhorn,Ground,345,Weak
+112,Rhydon,Ground,485,Average
+113,Chansey,Normal,450,Average
+114,Tangela,Grass,435,Average
+115,Kangaskhan,Normal,490,Average
+116,Horsea,Water,295,Very Weak
+117,Seadra,Water,440,Average
+118,Goldeen,Water,320,Weak
+119,Seaking,Water,450,Average
+120,Staryu,Water,340,Weak
+121,Starmie,Water,520,Strong
+122,Mr_Mime,Psychic,460,Average
+123,Scyther,Bug,500,Strong
+124,Jynx,Ice,455,Average
+125,Electabuzz,Electric,490,Average
+126,Magmar,Fire,495,Average
+127,Pinsir,Bug,500,Strong
+128,Tauros,Normal,490,Average
+129,Magikarp,Water,200,Very Weak
+130,Gyarados,Water,540,Strong
+131,Lapras,Water,535,Strong
+132,Ditto,Normal,288,Very Weak
+133,Eevee,Normal,325,Weak
+134,Vaporeon,Water,525,Strong
+135,Jolteon,Electric,525,Strong
+136,Flareon,Fire,525,Strong
+137,Porygon,Normal,395,Weak
+138,Omanyte,Rock,355,Weak
+139,Omastar,Rock,495,Average
+140,Kabuto,Rock,355,Weak
+141,Kabutops,Rock,495,Average
+142,Aerodactyl,Rock,515,Strong
+143,Snorlax,Normal,540,Strong
+144,Articuno,Ice,580,Legendary
+145,Zapdos,Electric,580,Legendary
+146,Moltres,Fire,580,Legendary
+147,Dratini,Dragon,300,Weak
+148,Dragonair,Dragon,420,Average
+149,Dragonite,Dragon,600,Legendary
+150,Mewtwo,Psychic,680,Legendary
+151,Mew,Psychic,600,Legendary
