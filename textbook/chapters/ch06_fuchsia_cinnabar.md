@@ -1,9 +1,16 @@
 # Chapter 6: Fuchsia City & Cinnabar Island — Instrumental Variables & Regression Discontinuity
 
+<!-- FIG-CH06-POISON -->
+<figure style="margin:1em auto; max-width:110px; text-align:center;">
+<img src="../../assets/sprites/types/poison.png" alt="Poison-type — Koga's specialty" style="width:90px; display:block; margin:0 auto;">
+<figcaption style="font-size:0.85em;">Poison-type — Koga's specialty</figcaption>
+</figure>
+
+
 <!-- FIG-CH06-KOGA -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/koga.png" alt="Koga, Fuchsia Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Koga, Fuchsia Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/koga.png" alt="Koga, Fuchsia Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Koga, Fuchsia Gym Leader</figcaption>
 </figure>
 
 
@@ -29,6 +36,34 @@ Let us begin.
 *You arrive in Fuchsia City, home of the Safari Zone. The warden tells you that admission is expensive — 500 Pokedollars per visit — but each week, a lottery awards free passes to randomly selected trainers. Some winners go, some do not. Some losers pay their own way in. The question on every trainer's mind: does Safari Zone training actually improve battle performance?*
 
 ---
+
+> **Notation at a Glance: IV and RDD Symbols**
+>
+> This chapter has a lot of characters. Keep this table nearby — it is the fastest way to stay oriented when formulas pile up.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $D_i$ | Treatment (e.g., Safari Zone attendance). Can be "self-chosen" → confounded. |
+> | $Y_i$ | Outcome (e.g., battle win rate). |
+> | $U_i$ | **Unobserved** confounder — exactly the thing regression can't fix. |
+> | $Z_i$ | **Instrument** — an external nudge that affects $D$ but not $Y$ directly. |
+> | First stage: $Z \to D$ | "The instrument actually moves the treatment." Must be strong ($F > 10$ rule). |
+> | Exclusion restriction: $Z \to Y$ only via $D$ | "The only channel from $Z$ to $Y$ runs through $D$." Untestable — defend it with theory. |
+> | Independence (exogeneity) | "The instrument is as-if randomly assigned" — no backdoor paths into $Z$. |
+> | $\hat{\tau}_{IV} = \dfrac{\text{Cov}(Z, Y)}{\text{Cov}(Z, D)}$ | The **Wald estimator** — reduced-form effect divided by first-stage effect. |
+> | 2SLS | Two-Stage Least Squares: regress $D$ on $Z$, predict $\hat{D}$, then regress $Y$ on $\hat{D}$. |
+> | LATE | Local Average Treatment Effect — the effect *for compliers*, not the whole population. |
+> | compliers / always-takers / never-takers / defiers | The four "types" of units in an IV world. LATE is *only* about compliers. |
+> | monotonicity | "No defiers" — $Z$ never *decreases* anyone's treatment probability. Required for LATE interpretation. |
+> | **RDD running variable** $X_i$ | A continuous score (e.g., happiness) that determines treatment by crossing a cutoff. |
+> | cutoff $c$ | The threshold: $D_i = 1$ iff $X_i \geq c$ (sharp) or $P(D_i = 1)$ jumps at $c$ (fuzzy). |
+> | $\lim_{x \downarrow c}$, $\lim_{x \uparrow c}$ | The limits of the outcome as $X$ approaches the cutoff from above / below. |
+> | $\tau_{RDD} = \lim_{x \downarrow c} E[Y \mid X = x] - \lim_{x \uparrow c} E[Y \mid X = x]$ | The RDD estimand — the jump in $Y$ exactly at the cutoff. |
+> | bandwidth $h$ | The window around the cutoff used for local regression. Small = less bias, more noise. |
+> | continuity assumption | "Nothing else jumps at the cutoff." The core RDD identifying assumption. |
+> | McCrary density test | A check for *manipulation* — does the density of $X$ itself jump at $c$? |
+>
+> **The big shift from Chapters 4–5**: IV and RDD do *not* require you to measure confounders. They require you to find (IV) or exploit (RDD) a source of variation in $D$ that is "as-if random." The price you pay is narrower identification: IV recovers LATE (effect for compliers), RDD recovers the effect at the cutoff, not the ATE.
 
 ## 6.1 The Instrumental Variables Idea
 
@@ -461,6 +496,24 @@ The ITT of 8 percentage points equals the LATE of 19 percentage points times the
 ---
 
 ## 6.5 Sharp Regression Discontinuity Design
+
+<!-- FIG-CH06-EVOCHAIN -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/10.png" alt="Caterpie" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#010 Caterpie</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/11.png" alt="Metapod" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#011 Metapod</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/12.png" alt="Butterfree" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#012 Butterfree</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">An evolution chain — the happiness threshold is the RDD running variable.</p>
+
 
 <!-- FIG-CH06-RDD -->
 <figure>
@@ -931,6 +984,78 @@ Suppose you are studying the effect of a new TM move on Pokemon battle performan
 - **McCrary, J. (2008).** "Manipulation of the Running Variable in the Regression Discontinuity Design: A Density Test." *Journal of Econometrics*, 142(2), 698-714. *Introduces the density test for checking manipulation in RDD.*
 
 - **Gelman, A. & Imbens, G. W. (2019).** "Why High-Order Polynomials Should Not Be Used in Regression Discontinuity Designs." *Journal of Business & Economic Statistics*, 37(3), 447-456. *A cautionary note against global polynomial specifications in RDD.*
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch06_fuchsia_cinnabar.ipynb` splits into two halves — Safari Zone IV and Cinnabar RDD. By the end, you should be able to do the following:
+
+**Instrumental Variables (Fuchsia):**
+
+1. **Compute the Wald estimator by hand.** Given $Z$, $D$, $Y$, compute $\hat{\tau}_{IV} = \text{Cov}(Z, Y) / \text{Cov}(Z, D)$ directly and confirm it matches the 2SLS coefficient.
+
+2. **Run 2SLS.** Use `linearmodels.IV2SLS` (or equivalent). Inspect the first-stage F-statistic. Flag anything with $F < 10$ as a weak instrument.
+
+3. **Diagnose a weak instrument.** Generate data where $Z$ weakly affects $D$. Show how 2SLS becomes unstable and how Anderson-Rubin confidence sets remain valid.
+
+4. **Reproduce the LATE interpretation.** Simulate a dataset with heterogeneous effects and explicit compliance types (compliers, always-takers, never-takers). Verify that 2SLS recovers the effect on compliers, not the ATE.
+
+5. **Stress-test the exclusion restriction.** Break it in simulation (add a direct effect from $Z$ to $Y$). Show how IV estimates become biased and discuss how you would defend the exclusion restriction in a real study.
+
+**Regression Discontinuity (Cinnabar):**
+
+6. **Implement sharp RDD by hand.** Fit two local linear regressions (one on each side of the cutoff) within a chosen bandwidth and take the difference of intercepts at the cutoff. Compare against `rdrobust`'s output.
+
+7. **Do bandwidth sensitivity analysis.** Re-estimate $\tau_{RDD}$ for a grid of bandwidths and plot the estimate and CI as a function of $h$. Pick the Imbens-Kalyanaraman (or Calonico-Cattaneo-Titiunik) optimal bandwidth and justify the choice.
+
+8. **Run the McCrary density test.** Check whether the density of the running variable is continuous at the cutoff. A discontinuity here is a red flag for manipulation.
+
+9. **Run falsification tests.** Check that pre-treatment covariates are continuous at the cutoff. Any jump in a covariate is evidence the design is broken.
+
+10. **Do fuzzy RDD.** When the treatment probability only jumps (not goes from 0 to 1), use the ratio-of-jumps formula and connect it explicitly to the Wald/IV estimator.
+
+11. **Complete the Trainer Challenge Exercises.** The notebook walks through (a) a full IV analysis of the Safari Zone lottery, (b) an RDD analysis of the happiness threshold, (c) a weak-instrument simulation, and (d) a manipulated-running-variable simulation where the design *should* fail.
+
+---
+
+## Check Your Understanding
+
+Two badges, two sets of concepts. Work through both before moving on.
+
+**Questions you should be able to answer out loud, without notes:**
+
+*Instrumental Variables:*
+
+- State the three IV assumptions (relevance, independence, exclusion) in one sentence each. Which are testable? Which are not?
+- Write the Wald estimator as a ratio and explain in plain English what each term in the numerator and denominator measures.
+- Why does OLS fail when $U$ is unobserved, and how does IV "get around" it without ever measuring $U$?
+- Define the four compliance types. Why does LATE apply only to compliers?
+- What does monotonicity assume, and why is it necessary for the LATE interpretation?
+- What is a weak instrument, and what can go wrong when $F < 10$?
+- Give a plausible way the exclusion restriction could fail for the Safari Zone lottery. How would you argue for or against its validity in a real study?
+
+*Regression Discontinuity:*
+
+- State the sharp RDD estimand $\tau_{RDD} = \lim_{x \downarrow c} E[Y \mid X = x] - \lim_{x \uparrow c} E[Y \mid X = x]$ and explain what it represents causally.
+- What is the core identifying assumption of RDD? Why is a discontinuity in a covariate at the cutoff a bad sign?
+- Why is local linear regression preferred over global polynomial fits?
+- What does the bandwidth $h$ trade off? What happens as $h \to 0$? As $h \to \infty$?
+- What does the McCrary density test check, and what would a failed test tell you?
+- Compare sharp and fuzzy RDD. How does fuzzy RDD connect to IV?
+- What does the RDD estimate identify, and how should you think about external validity away from the cutoff?
+
+**Tasks you should be able to perform in code:**
+
+- Compute Wald and 2SLS estimates; report the first-stage F-statistic.
+- Run a weak-instrument diagnostic and construct an Anderson-Rubin confidence set.
+- Distinguish compliance types in a simulated dataset and verify LATE numerically.
+- Fit sharp RDD via local linear regression, pick an optimal bandwidth, and report robust CIs.
+- Implement and interpret the McCrary density test.
+- Do fuzzy RDD and confirm it equals the IV/Wald ratio in the local neighborhood.
+- Run covariate continuity checks and flag failed placebo tests.
+
+Complete this list and you have earned both the Soul and Volcano badges.
 
 ---
 

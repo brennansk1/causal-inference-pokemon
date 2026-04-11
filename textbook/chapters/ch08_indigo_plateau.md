@@ -23,7 +23,98 @@
 
 ---
 
+> **Notation at a Glance: The Frontier Toolkit**
+>
+> Chapter 8 introduces more notation than any other chapter — each Elite Four section has its own vocabulary. Use this sheet as a master index; every symbol you see in the body points back here.
+>
+> **Mediation (§8.1)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $M_i$ | A **mediator** — a variable on the causal path $D \to M \to Y$. |
+> | $M_i(d)$ | The mediator's value *if* $i$ received treatment $d$. |
+> | $Y_i(d, m)$ | The outcome *if* $i$ had treatment $d$ and mediator value $m$. |
+> | NDE = $E[Y_i(1, M_i(0)) - Y_i(0, M_i(0))]$ | **Natural Direct Effect** — the effect of treatment holding the mediator at its control value. |
+> | NIE = $E[Y_i(1, M_i(1)) - Y_i(1, M_i(0))]$ | **Natural Indirect Effect** — the effect operating through the mediator. |
+> | TE = NDE + NIE | Total effect decomposition. |
+> | sequential ignorability | The strong untestable assumption needed to identify NDE/NIE. |
+>
+> **Sensitivity Analysis (§8.2)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $\Gamma$ | Rosenbaum's sensitivity parameter — "how much could hidden bias multiply the odds of treatment?" |
+> | E-value | "The minimum strength an unmeasured confounder would need to explain away the effect." |
+> | Oster $\delta$ | Coefficient stability: how much more influential would unobservables need to be than observables to kill the effect? |
+> | Manski bounds | Worst-case bounds on the causal effect under *no* assumptions about the unobserved counterfactual. |
+>
+> **Heterogeneous Effects (§8.3)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $\tau(x) = E[Y(1) - Y(0) \mid X = x]$ | **CATE** — the treatment effect for units with covariates $x$. |
+> | $\hat{\tau}(x)$ | CATE estimate from a model (e.g., causal forest). |
+> | BLP | Best Linear Projection of $\tau(x)$ onto a small set of covariates. |
+> | GATES | Sorted Group ATEs — split units by predicted $\hat{\tau}(x)$, compare actual effects across quantile groups. |
+> | CLAN | Classification Analysis — characterize the "most affected" group's covariates. |
+> | policy $\pi(x)$ | A rule mapping covariates to a treatment decision. |
+>
+> **Interference (§8.4)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | SUTVA | "No interference, no hidden variations." The standard assumption. |
+> | $Y_i(\mathbf{D})$ | Outcome for unit $i$ as a function of the *entire* vector of treatment assignments. |
+> | exposure mapping $e(\mathbf{D})$ | Compresses the vector of treatments into a summary relevant for unit $i$ (e.g., "how many neighbors were treated"). |
+> | partial interference | "Interference only happens inside clusters, not across them." |
+> | direct / spillover effect | The effect of your own treatment / the effect of a peer's treatment on you. |
+> | two-stage randomization | Randomize cluster-level saturation, then randomize individuals within clusters. |
+>
+> **Causal Discovery (§8.7)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | PC / FCI / GES | Algorithms that learn DAG structure from data using independence tests or scores. |
+> | Markov equivalence class | The set of DAGs that cannot be distinguished using observational data alone. |
+>
+> **Causal Inference + ML (§8.8)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | DML | Double / Debiased Machine Learning — plug ML nuisance estimates into a Neyman-orthogonal score. |
+> | TMLE | Targeted Maximum Likelihood Estimation — doubly robust, semiparametrically efficient. |
+> | nuisance parameter | Things you need to estimate but don't directly care about (e.g., $e(X)$, $m(X)$). |
+> | $\sqrt{n}$-consistency | Estimates whose error shrinks at rate $1/\sqrt{n}$ — the gold standard. |
+>
+> **Transportability (§8.9)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $S$ | Indicator for "study" population (source = 0, target = 1). |
+> | selection diagram | A DAG with selection nodes showing where populations differ. |
+> | reweighting to transport | Multiply source-population estimates by density ratios to match the target population. |
+>
+> **Dynamic Treatment Regimes (§8.10)**
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $A_t$ | Treatment at time $t$. |
+> | $\bar{A}_t = (A_1, \ldots, A_t)$ | Treatment *history* up to time $t$. |
+> | MSM | Marginal Structural Model — parameterizes causal effects of full treatment histories. |
+> | IPTW | Inverse Probability of Treatment Weights — time-varying version of IPW. |
+> | g-computation | Iteratively impute future outcomes under hypothetical treatment sequences. |
+> | Q-learning | Backward induction to find optimal dynamic treatment rules. |
+>
+> If at any point the body text feels opaque, jump here first. Most confusion in Chapter 8 is notation shock, not concept shock.
+
 ## 8.1 Mediation Analysis: Lorelei's Ice Chamber
+
+<!-- FIG-CH08-DEWGONG -->
+<figure style="margin:1.5em auto; max-width:170px; text-align:center;">
+<img src="../../assets/sprites/front/87.png" alt="Dewgong" style="width:150px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;"><strong>#087 Dewgong</strong></figcaption>
+</figure>
+
 
 <!-- FIG-CH08-MED -->
 <figure>
@@ -134,6 +225,13 @@ Estimating the mediation model, we find that roughly 60% of the total effect of 
 
 ## 8.2 Sensitivity Analysis: Agatha's Ghost Chamber
 
+<!-- FIG-CH08-GENGAR -->
+<figure style="margin:1.5em auto; max-width:170px; text-align:center;">
+<img src="../../assets/sprites/front/94.png" alt="Gengar" style="width:150px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;"><strong>#094 Gengar</strong></figcaption>
+</figure>
+
+
 *The room is dark. Purple mist coils along the floor. Somewhere in the shadows, something cackles. Then Agatha materializes from the fog, leaning on her cane, a Gengar grinning at her shoulder.*
 
 *"Every study you have ever read," she whispers, "rests on the assumption that you have measured everything that matters. But what about the things you* cannot *see? The ghosts in your model? The unobserved confounders that lurk behind every observational estimate?"*
@@ -226,6 +324,13 @@ Taken together, these analyses suggest the Exp. Share effect is moderately robus
 ---
 
 ## 8.3 Heterogeneous Treatment Effects: Bruno's Fighting Ring
+
+<!-- FIG-CH08-MACHAMP -->
+<figure style="margin:1.5em auto; max-width:170px; text-align:center;">
+<img src="../../assets/sprites/front/68.png" alt="Machamp" style="width:150px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;"><strong>#068 Machamp</strong></figcaption>
+</figure>
+
 
 *The chamber shakes. Two Machamp are sparring in the center of a raised platform. Bruno sits cross-legged at the edge, shirtless, his arms folded across his chest. He opens one eye as you enter.*
 
@@ -331,6 +436,13 @@ The optimal treatment rule recommends Exp. Share for trainers with team diversit
 ---
 
 ## 8.4 Interference & Spillovers: Lance's Dragon Chamber
+
+<!-- FIG-CH08-DRAGONITE -->
+<figure style="margin:1.5em auto; max-width:170px; text-align:center;">
+<img src="../../assets/sprites/front/149.png" alt="Dragonite" style="width:150px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;"><strong>#149 Dragonite</strong></figcaption>
+</figure>
+
 
 *The final Elite Four chamber is vast --- an arena open to the sky, where dark clouds swirl overhead. Lance stands at the far end, his cape billowing, flanked by three Dragonite. As you enter, two of them turn to face you --- and each other.*
 
@@ -781,10 +893,40 @@ The optimal dynamic regime, estimated via Q-learning, prescribes: use items befo
 
 ## 8.11 The Champion Battle: Blue's Causal Fallacies
 
+<!-- FIG-CH08-BLUETEAM -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/18.png" alt="Pidgeot" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#018 Pidgeot</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/65.png" alt="Alakazam" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#065 Alakazam</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/112.png" alt="Rhydon" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#112 Rhydon</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/103.png" alt="Exeggutor" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#103 Exeggutor</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/59.png" alt="Arcanine" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#059 Arcanine</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/6.png" alt="Charizard" style="width:90px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#006 Charizard</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">Blue's Champion team — the six fallacies embodied.</p>
+
+
 <!-- FIG-CH08-BLUE -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/blue.png" alt="Rival Blue, the Champion" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Rival Blue, the Champion</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/blue.png" alt="Rival Blue, the Champion" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Rival Blue, the Champion</figcaption>
 </figure>
 
 
@@ -1145,6 +1287,140 @@ VanderWeele, T. J., & Ding, P. (2017). "Sensitivity Analysis in Observational Re
 Wager, S., & Athey, S. (2018). "Estimation and Inference of Heterogeneous Treatment Effects Using Random Forests." *Journal of the American Statistical Association*, 113(523), 1228--1242.
 
 Zhao, Y., Zeng, D., Rush, A. J., & Kosorok, M. R. (2012). "Estimating Individualized Treatment Rules Using Outcome Weighted Learning." *Journal of the American Statistical Association*, 107(499), 1106--1118.
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch08_indigo_plateau.ipynb` is the capstone. It does not ask you to be an expert in *every* frontier topic — it asks you to *know where each tool lives and be able to run one worked example of each*. Before claiming the Earth Badge and the Champion title, you should be able to do the following:
+
+**Mediation (Lorelei):**
+
+1. **Compute NDE and NIE on a simulated dataset with a known mediator.** Use either a regression-based approach (Imai-Keele-Tingley) or the `mediation` package. Verify NDE + NIE ≈ Total Effect.
+
+2. **Run a sensitivity analysis for mediation.** Use the $\rho$ parameter (correlation between errors in mediator and outcome equations) to see how robust the NIE is to sequential ignorability violations.
+
+**Sensitivity Analysis (Agatha):**
+
+3. **Compute an E-value.** For an estimated effect and its CI, compute the minimum confounder strength that would explain it away, using `EValue` (Python/R).
+
+4. **Construct Rosenbaum bounds.** For a matched dataset, compute the range of p-values over $\Gamma \in [1, 3]$ and report the value of $\Gamma$ at which statistical significance is lost.
+
+5. **Compute Manski worst-case bounds.** Show the gap between upper and lower bounds under no-assumption partial identification.
+
+**Heterogeneous Treatment Effects (Bruno):**
+
+6. **Fit a causal forest.** Use `econml.CausalForestDML` on a simulated dataset with a known heterogeneous CATE. Plot $\hat{\tau}(x)$ against the true $\tau(x)$.
+
+7. **Run GATES and CLAN.** Group units by predicted $\hat{\tau}(x)$, compute the actual ATE in each quantile, and characterize the top-quintile's covariates.
+
+8. **Estimate a policy value.** Given $\hat{\tau}(x)$, define a treatment rule $\pi(x) = \mathbf{1}\{\hat{\tau}(x) > 0\}$ and evaluate its expected welfare against a uniform rule.
+
+**Interference (Lance):**
+
+9. **Simulate a spillover experiment.** Construct a network, assign treatment with some saturation level, define an exposure mapping (e.g., "fraction of treated neighbors"), and estimate direct and indirect effects.
+
+10. **Run a two-stage randomization.** Randomize cluster saturations, then randomize within clusters. Estimate direct and spillover effects.
+
+**Causal Discovery (§8.7):**
+
+11. **Run the PC algorithm** on a simulated dataset and compare the learned DAG to the ground truth. Understand why some edges remain undirected (Markov equivalence class).
+
+**Causal Inference + ML (§8.8):**
+
+12. **Run DML for the ATE.** Use `econml.DML` or `doubleml` on a high-dimensional dataset. Contrast with naive OLS and verify that DML is less biased and has proper $\sqrt{n}$-rate inference.
+
+**Transportability (§8.9):**
+
+13. **Transport an effect across populations.** Compute source- and target-population covariate distributions, build density-ratio weights, and reweight the source-population ATE.
+
+**Dynamic Regimes (§8.10):**
+
+14. **Fit a Marginal Structural Model.** Build IPTW weights from a time-varying treatment model, fit an MSM to estimate the effect of a treatment history, and compare against naive regression.
+
+**Synthesis — Blue's Fallacies (§8.11):**
+
+15. **Identify which fallacy is which.** For each of Blue's six battles, produce the corrected estimate and explain in one sentence *which* bias Blue committed (confounding, collider, anecdote, reverse causality, Simpson's, bad control).
+
+16. **Complete the Champion's Gauntlet.** The final end-to-end challenge: given a messy real-world-style dataset, design and defend a full analysis from DAG through sensitivity.
+
+You are not expected to master every frontier method — you are expected to recognize each and run a minimum viable example of each.
+
+---
+
+## Check Your Understanding
+
+You are about to become the Champion. Use this list to verify that every section sank in. If you can answer every question and run every task, you know the Kanto causal inference curriculum as well as any working researcher.
+
+**Questions you should be able to answer out loud, without notes:**
+
+*Mediation:*
+
+- State the NDE and NIE definitions. Why is the naive "controlling for the mediator" approach biased?
+- What is sequential ignorability? Why is it much stronger than standard ignorability?
+- Why must mediation estimates *always* be paired with a sensitivity analysis?
+
+*Sensitivity:*
+
+- What does Rosenbaum's $\Gamma$ quantify? How do you interpret "significant at $\Gamma = 1.5$"?
+- What is an E-value and how is it computed? When would you reach for an E-value instead of Rosenbaum bounds?
+- What does Oster's $\delta$ measure, and what is the "coefficient stability" intuition?
+- State Manski's worst-case bound idea in plain English.
+
+*Heterogeneous Effects:*
+
+- What is the difference between the ATE and CATE $\tau(x)$?
+- Explain honesty in causal forests — why do we split sample-halving into tree-building and estimation?
+- What do BLP and GATES each give you, and when is each useful?
+- What is a policy $\pi(x)$, and how do you evaluate its welfare?
+
+*Interference:*
+
+- When does SUTVA fail? Give two concrete Pokemon-themed examples.
+- Define direct and spillover effects under partial interference.
+- What is an exposure mapping, and why do we need one?
+- How does two-stage randomization help you separate direct and spillover effects?
+
+*Causal Discovery:*
+
+- What does the PC algorithm learn, and what does it *not* learn?
+- What is a Markov equivalence class? Why can't observational data uniquely identify a DAG?
+
+*Causal Inference with ML:*
+
+- Why can't you just plug ML predictions into OLS and call it causal inference?
+- What is Neyman orthogonality, and why does DML need it?
+- What does TMLE's "targeting" step do?
+
+*Transportability:*
+
+- Why might a causal effect estimated in Kanto *not* apply in Johto? What distributions must match for an effect to transport?
+- How are selection diagrams different from ordinary DAGs?
+
+*Dynamic Regimes:*
+
+- Why does regressing time-varying outcomes on time-varying treatments with time-varying confounders fail (even if you control for the confounders)?
+- What does IPTW fix in dynamic settings, and what assumption does it require?
+- What does g-computation compute, and how is it different from MSMs?
+
+*Blue's Fallacies (§8.11):*
+
+- State the six fallacies and give a one-line corrective for each.
+- Pick any fallacy and write its DAG on a napkin. Which path is spurious?
+
+**Tasks you should be able to perform in code:**
+
+- Compute NDE and NIE from a fitted mediation model.
+- Compute an E-value and a Rosenbaum bound for a matched analysis.
+- Fit a causal forest, plot $\hat{\tau}(x)$, and run BLP/GATES/CLAN.
+- Simulate a partial-interference experiment and estimate direct and spillover effects.
+- Run the PC algorithm on a dataset and explain which edges are/aren't directed.
+- Run DML (any flavor) on a high-dimensional ATE problem.
+- Build density-ratio weights to transport an effect to a target population.
+- Fit an MSM with IPTW on a time-varying treatment dataset.
+- Diagnose the bias in each of Blue's six fallacies and produce a corrected estimate.
+
+Finish this list, beat Blue, and the Earth Badge — and the Champion title — are yours.
 
 ---
 

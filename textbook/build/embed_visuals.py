@@ -62,12 +62,65 @@ def badge(name: str, display: str) -> str:
     )
 
 
-def character(name: str, display: str, side: str = "right") -> str:
+_CHARACTER_EXT = {"nurse_joy": "webp"}
+
+
+def pokemon(dex_id: int, name: str, width: int = 140) -> str:
+    """A single centered Pokemon sprite figure, captioned with Pokedex number."""
     return (
-        f'<figure style="float:{side}; margin:0 0 12px 16px; max-width:140px;">\n'
-        f'<img src="{A}/characters/{name}.png" alt="{display}" '
-        f'style="width:120px; display:block; image-rendering: pixelated;">\n'
-        f'<figcaption style="font-size:0.85em; text-align:center;">{display}</figcaption>\n'
+        f'<figure style="margin:1.5em auto; max-width:{width + 20}px; text-align:center;">\n'
+        f'<img src="{A}/sprites/front/{dex_id}.png" alt="{name}" '
+        f'style="width:{width}px; display:block; margin:0 auto; image-rendering: pixelated;">\n'
+        f'<figcaption style="font-size:0.85em;"><strong>#{dex_id:03d} {name}</strong></figcaption>\n'
+        f'</figure>\n'
+    )
+
+
+def pokemon_row(entries, width: int = 110, caption: str = "") -> str:
+    """A horizontal row of Pokemon sprites. `entries` is a list of (dex_id, name)."""
+    items = "".join(
+        f'<figure style="margin:0; text-align:center;">\n'
+        f'<img src="{A}/sprites/front/{dex_id}.png" alt="{name}" '
+        f'style="width:{width}px; display:block; margin:0 auto; image-rendering: pixelated;">\n'
+        f'<figcaption style="font-size:0.8em;">#{dex_id:03d} {name}</figcaption>\n'
+        f'</figure>\n'
+        for dex_id, name in entries
+    )
+    cap = f'<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">{caption}</p>\n' if caption else ""
+    return (
+        f'<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">\n'
+        f'{items}'
+        f'</div>\n'
+        f'{cap}'
+    )
+
+
+def type_icon(type_name: str, display=None, width: int = 90) -> str:
+    """A single type icon (badge-style) with optional caption."""
+    label = display or f"{type_name.title()}-type"
+    return (
+        f'<figure style="margin:1em auto; max-width:{width + 20}px; text-align:center;">\n'
+        f'<img src="{A}/sprites/types/{type_name}.png" alt="{label}" '
+        f'style="width:{width}px; display:block; margin:0 auto;">\n'
+        f'<figcaption style="font-size:0.85em;">{label}</figcaption>\n'
+        f'</figure>\n'
+    )
+
+
+def character(name: str, display: str, side: str = "right") -> str:
+    # `side` is kept for backward-compatibility but ignored: floated figures
+    # overlap adjacent text in weasyprint/Chrome PDF output, so character
+    # portraits render as centered block figures instead.
+    del side
+    ext = _CHARACTER_EXT.get(name, "png")
+    # Only the pixelated Gen-1 sprites want nearest-neighbor scaling; smooth
+    # portraits (e.g. Nurse Joy) should render normally.
+    rendering = "" if ext != "png" else " image-rendering: pixelated;"
+    return (
+        f'<figure style="margin:1.5em auto; max-width:160px; text-align:center;">\n'
+        f'<img src="{A}/characters/{name}.{ext}" alt="{display}" '
+        f'style="width:140px; display:block; margin:0 auto;{rendering}">\n'
+        f'<figcaption style="font-size:0.85em;">{display}</figcaption>\n'
         f'</figure>\n'
     )
 
@@ -90,6 +143,16 @@ def edit_ch01():
         character("oak", "Professor Oak", "right"),
         "FIG-CH01-OAK",
     )
+    text = insert_after(
+        text,
+        "### The Starter Debate",
+        pokemon_row(
+            [(1, "Bulbasaur"), (4, "Charmander"), (7, "Squirtle")],
+            width=120,
+            caption="The three Kanto starters — the choice at the heart of this chapter's causal question.",
+        ),
+        "FIG-CH01-STARTERS",
+    )
     f.write_text(text)
 
 
@@ -101,6 +164,18 @@ def edit_ch02():
         "# Chapter 2:",
         character("brock", "Brock, Pewter Gym Leader", "right"),
         "FIG-CH02-BROCK",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 2:",
+        type_icon("rock", "Rock-type — Brock's specialty"),
+        "FIG-CH02-ROCKTYPE",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 2:",
+        pokemon(95, "Onix", width=160),
+        "FIG-CH02-ONIX",
     )
     text = insert_after(
         text,
@@ -154,6 +229,22 @@ def edit_ch04():
     )
     text = insert_after(
         text,
+        "# Chapter 4:",
+        type_icon("electric", "Electric-type — Lt. Surge's specialty"),
+        "FIG-CH04-ELEC",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 4:",
+        pokemon_row(
+            [(25, "Pikachu"), (26, "Raichu"), (100, "Voltorb")],
+            width=105,
+            caption="Vermilion's Electric-type roster — treatment groups we'll try to match.",
+        ),
+        "FIG-CH04-ELECMONS",
+    )
+    text = insert_after(
+        text,
         "## Chapter Summary",
         badge("thunder", "Thunder"),
         "FIG-CH04-BADGE",
@@ -169,6 +260,22 @@ def edit_ch05():
         "# Chapter 5:",
         character("erika", "Erika, Celadon Gym Leader", "right"),
         "FIG-CH05-ERIKA",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 5:",
+        type_icon("grass", "Grass-type — Erika's specialty"),
+        "FIG-CH05-GRASS",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 5:",
+        pokemon_row(
+            [(43, "Oddish"), (44, "Gloom"), (45, "Vileplume")],
+            width=105,
+            caption="Erika's Grass-type lineage — a reminder that regression can adjust for anything, if the DAG says so.",
+        ),
+        "FIG-CH05-GRASSMONS",
     )
     text = insert_after(
         text,
@@ -197,6 +304,12 @@ def edit_ch06():
     )
     text = insert_after(
         text,
+        "# Chapter 6:",
+        type_icon("poison", "Poison-type — Koga's specialty"),
+        "FIG-CH06-POISON",
+    )
+    text = insert_after(
+        text,
         "## 6.1",
         figure(f"{A}/diagrams/dag_iv.png",
                "Instrumental variables: Z affects Y only through D.", "70%"),
@@ -208,6 +321,16 @@ def edit_ch06():
         figure(f"{A}/diagrams/rdd_evolution.png",
                "Sharp Regression Discontinuity at the evolution threshold.", "80%"),
         "FIG-CH06-RDD",
+    )
+    text = insert_after(
+        text,
+        "## 6.5",
+        pokemon_row(
+            [(10, "Caterpie"), (11, "Metapod"), (12, "Butterfree")],
+            width=105,
+            caption="An evolution chain — the happiness threshold is the RDD running variable.",
+        ),
+        "FIG-CH06-EVOCHAIN",
     )
     text = insert_after(
         text,
@@ -229,6 +352,22 @@ def edit_ch07():
         "# Chapter 7:",
         character("sabrina", "Sabrina, Saffron Gym Leader", "right"),
         "FIG-CH07-SABRINA",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 7:",
+        type_icon("psychic", "Psychic-type — Sabrina's specialty"),
+        "FIG-CH07-PSY",
+    )
+    text = insert_after(
+        text,
+        "# Chapter 7:",
+        pokemon_row(
+            [(63, "Abra"), (64, "Kadabra"), (65, "Alakazam")],
+            width=105,
+            caption="Sabrina's Psychic lineage — we'll track treated and control cities through time.",
+        ),
+        "FIG-CH07-PSYMONS",
     )
     text = insert_after(
         text,
@@ -268,9 +407,44 @@ def edit_ch08():
     )
     text = insert_after(
         text,
+        "## 8.1 Mediation",
+        pokemon(87, "Dewgong", width=150),
+        "FIG-CH08-DEWGONG",
+    )
+    text = insert_after(
+        text,
+        "## 8.2 Sensitivity",
+        pokemon(94, "Gengar", width=150),
+        "FIG-CH08-GENGAR",
+    )
+    text = insert_after(
+        text,
+        "## 8.3 Heterogeneous",
+        pokemon(68, "Machamp", width=150),
+        "FIG-CH08-MACHAMP",
+    )
+    text = insert_after(
+        text,
+        "## 8.4 Interference",
+        pokemon(149, "Dragonite", width=150),
+        "FIG-CH08-DRAGONITE",
+    )
+    text = insert_after(
+        text,
         "## 8.11",
         character("blue", "Rival Blue, the Champion", "right"),
         "FIG-CH08-BLUE",
+    )
+    text = insert_after(
+        text,
+        "## 8.11",
+        pokemon_row(
+            [(18, "Pidgeot"), (65, "Alakazam"), (112, "Rhydon"),
+             (103, "Exeggutor"), (59, "Arcanine"), (6, "Charizard")],
+            width=90,
+            caption="Blue's Champion team — the six fallacies embodied.",
+        ),
+        "FIG-CH08-BLUETEAM",
     )
     text = insert_after(
         text,

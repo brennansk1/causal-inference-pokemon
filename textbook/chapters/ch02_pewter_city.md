@@ -1,9 +1,23 @@
 # Chapter 2: Pewter City — Randomized Experiments
 
+<!-- FIG-CH02-ONIX -->
+<figure style="margin:1.5em auto; max-width:180px; text-align:center;">
+<img src="../../assets/sprites/front/95.png" alt="Onix" style="width:160px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;"><strong>#095 Onix</strong></figcaption>
+</figure>
+
+
+<!-- FIG-CH02-ROCKTYPE -->
+<figure style="margin:1em auto; max-width:110px; text-align:center;">
+<img src="../../assets/sprites/types/rock.png" alt="Rock-type — Brock's specialty" style="width:90px; display:block; margin:0 auto;">
+<figcaption style="font-size:0.85em;">Rock-type — Brock's specialty</figcaption>
+</figure>
+
+
 <!-- FIG-CH02-BROCK -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/brock.png" alt="Brock, Pewter Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Brock, Pewter Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/brock.png" alt="Brock, Pewter Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Brock, Pewter Gym Leader</figcaption>
 </figure>
 
 
@@ -280,6 +294,27 @@ The Pewter Protein RCT implements **double-blinding**. Trainers cannot tell whic
 ## 2.3 Estimands and Estimators
 
 With the experiment designed and the data collected, we turn to the question of estimation. What exactly are we estimating, and how?
+
+> **Notation at a Glance: The Symbols You'll See in This Section**
+>
+> The next few pages throw a lot of Greek letters at you. Here is what each one *means*, in plain English, before we use them in formulas.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $n_1, n_0$ | How many trainers are in the treatment group ($n_1$) and the control group ($n_0$). |
+> | $\bar{Y}_1, \bar{Y}_0$ | The group *averages* — the mean outcome in the treatment and control groups. |
+> | $\hat{\tau} = \bar{Y}_1 - \bar{Y}_0$ | Our point estimate of the treatment effect: just the difference of the two group means. The hat ( $\hat{\;}$ ) means "estimated from data." |
+> | $s_1^2, s_0^2$ | The *sample* variance in each group. Measures how spread out the outcomes are. |
+> | $\sigma_1^2, \sigma_0^2$ | The *true* (population) variances. Greek letters = truth; Latin letters with hats = estimates. |
+> | $\widehat{SE}$ | The standard error of $\hat{\tau}$ — how much our estimate would wiggle if we re-ran the same experiment. |
+> | $\alpha$ | The *significance level* of a test (conventionally 0.05). "How often do we tolerate a false alarm?" |
+> | $1 - \beta$ | The *power* of a test (conventionally 0.80). "How often do we catch a real effect?" |
+> | $z_{\alpha/2}, z_{\beta}$ | Just lookup values from the normal curve — 1.96 and 0.842 for $\alpha = 0.05, \beta = 0.20$. |
+> | $\mu_1 - \mu_0$ | The *effect size* we care about — the smallest difference worth detecting. |
+> | $\rho$ | Intra-cluster correlation: "how similar are units in the same cluster?" |
+> | $\epsilon_i$ | The unexplained leftover — the part of trainer $i$'s outcome no variable in the model accounts for. |
+>
+> The rule of thumb: Greek letters ($\mu, \sigma, \tau, \alpha, \beta$) are usually *unknown truths*. Latin letters with hats ($\hat{\tau}, \hat{\mu}, s$) are what we *compute* from data to estimate them.
 
 ### Estimands: ATE, ATT, and ATC
 
@@ -751,6 +786,63 @@ The mean outcomes are: Protein group (as assigned) = 142.7 HP, Placebo group (as
 - **Athey, S. & Imbens, G.W.** (2017). "The Econometrics of Randomized Experiments." In *Handbook of Economic Field Experiments*, Vol. 1, 73-140. A modern survey of the econometric theory of randomized experiments, covering design, analysis, and extensions.
 
 - **Imbens, G.W. & Rubin, D.B.** (2015). *Causal Inference for Statistics, Social, and Biomedical Sciences.* Cambridge University Press. The comprehensive graduate-level reference for the potential outcomes approach to causal inference.
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch02_pewter_city.ipynb` is where RCT theory becomes a workable analysis pipeline. Before you claim the Boulder Badge, you should be able to do each of the following end-to-end in code:
+
+1. **Simulate a completely randomized experiment.** Given $n$ trainers and known potential outcomes, flip a coin to assign treatment, compute $\hat{\tau} = \bar{Y}_1 - \bar{Y}_0$, and verify empirically that averaging $\hat{\tau}$ over many randomizations recovers the true ATE. This is the core "randomization makes naive estimators unbiased" demo.
+
+2. **Build a balance table.** Using the Pewter Protein dataset (or a simulated one), compute the standardized mean difference (or two-sample $t$-test) for each pre-treatment covariate across treatment and control. Know what "balanced" looks like and be able to flag a covariate that is not.
+
+3. **Run a power analysis.** Given $\alpha$, desired power $1-\beta$, outcome standard deviation $\sigma$, and minimum detectable effect (MDE), compute the required sample size per group. Then flip it around: given a fixed $n$, what MDE can you detect? Both directions matter.
+
+4. **Compute a Neyman standard error and CI by hand (in code).** From raw group means and sample variances, build $\widehat{SE}$, a 95% confidence interval, and the two-sided p-value. Do *not* rely on a canned `ttest_ind` call — write the formula yourself at least once. Then cross-check against `scipy.stats.ttest_ind`.
+
+5. **Do a Lin (2013) regression adjustment.** Fit `Y ~ D + (X - mean(X)) + D:(X - mean(X))`. Confirm the treatment coefficient is close to the unadjusted estimate but the standard error shrinks when $X$ predicts $Y$. Be able to explain in one sentence why this adjustment doesn't bias the estimate.
+
+6. **Run Fisher randomization inference.** For a small dataset, enumerate (or sample) the permutation distribution of $\hat{\tau}$ under the sharp null, compute the exact p-value, and plot the distribution with the observed statistic marked.
+
+7. **Complete the Trainer Challenge Exercises.**
+   - **Exercise 2.1:** Balance-check simulation — what fraction of 1,000 random experiments show at least one covariate with $p < 0.05$ by chance?
+   - **Exercise 2.2:** Power curve — plot sample size vs. power for $1-\beta \in [0.5, 0.99]$.
+   - **Exercise 2.3:** Randomization inference by hand on the 8-trainer mini-dataset.
+   - **Exercise 2.4:** ITT vs. per-protocol vs. LATE on the non-compliance table.
+
+By the end, "run an RCT" should feel like 30 lines of pandas, not a mystery.
+
+---
+
+## Check Your Understanding
+
+Walk through these before challenging Brock. If anything feels shaky, revisit that section — the rest of the book leans hard on Chapter 2's intuition about randomization.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- Why does random assignment make the naive difference-in-means an *unbiased* estimate of the ATE? Which term in the selection-bias decomposition does it kill?
+- State the independence condition $(Y_i(0), Y_i(1)) \perp\!\!\!\perp D_i$ and explain what it means in plain English about "the type of trainer who is treated."
+- Why does randomization balance unobserved confounders, not just observed ones? Can any purely observational method do the same?
+- Write the Neyman variance estimator $\hat{V}[\hat{\tau}] = s_1^2/n_1 + s_0^2/n_0$ and explain why it is *conservative* (i.e., why the "true" variance is generally smaller).
+- What is the difference between $\sigma_1^2$, $s_1^2$, and $\widehat{SE}$? When do you use each?
+- In an RCT, why do ATE, ATT, and ATC all coincide?
+- What is statistical power, and what four inputs determine it? If you double the MDE, what happens to the required sample size?
+- Why does stratified (block) randomization reduce variance? When does it *not* help?
+- Explain SUTVA in two bullet points (no interference, no hidden variations) and give a concrete Pewter-Protein way each part could fail.
+- Compare Fisher's sharp null and Neyman's average-effect null. Which test assumes constant effects across units? Which one gives exact p-values in finite samples?
+- What does ITT estimate? What does per-protocol estimate? Why is the per-protocol estimate biased under noncompliance?
+
+**Tasks you should be able to perform in code:**
+
+- Randomly assign treatment to $n$ units and compute $\hat{\tau}$, $\widehat{SE}$, 95% CI, and a two-sided p-value — using both your own formula and `scipy`.
+- Build a balance table showing the standardized mean difference for every covariate in a dataset.
+- Compute required sample size from $(\alpha, 1-\beta, \sigma, \text{MDE})$ and plot the sample-size–vs–power curve.
+- Fit a Lin (2013) regression with centered covariates and the treatment-covariate interaction, and compare its SE to the unadjusted SE.
+- Run a permutation test: enumerate (or sample) treatment assignments, compute $\hat{\tau}$ under each, and compute the exact Fisher p-value.
+- Given a noncompliance table (assigned vs. took), compute the ITT estimate and the Wald/LATE estimate.
+
+If you can explain the answers *and* run the code without a cheat-sheet, you have truly earned the Boulder Badge.
 
 ---
 

@@ -1,9 +1,34 @@
 # Chapter 7: Saffron City --- Difference-in-Differences & Synthetic Controls
 
+<!-- FIG-CH07-PSYMONS -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/63.png" alt="Abra" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#063 Abra</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/64.png" alt="Kadabra" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#064 Kadabra</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/65.png" alt="Alakazam" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#065 Alakazam</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">Sabrina's Psychic lineage — we'll track treated and control cities through time.</p>
+
+
+<!-- FIG-CH07-PSY -->
+<figure style="margin:1em auto; max-width:110px; text-align:center;">
+<img src="../../assets/sprites/types/psychic.png" alt="Psychic-type — Sabrina's specialty" style="width:90px; display:block; margin:0 auto;">
+<figcaption style="font-size:0.85em;">Psychic-type — Sabrina's specialty</figcaption>
+</figure>
+
+
 <!-- FIG-CH07-SABRINA -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/sabrina.png" alt="Sabrina, Saffron Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Sabrina, Saffron Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/sabrina.png" alt="Sabrina, Saffron Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Sabrina, Saffron Gym Leader</figcaption>
 </figure>
 
 
@@ -21,6 +46,35 @@ These two problems motivate the core methods of this chapter: **difference-in-di
 Let us begin.
 
 ---
+
+> **Notation at a Glance: DiD and Synthetic Control**
+>
+> This chapter has more subscripts than any other. Keep this sheet beside you so the $Y_{it}$'s, $g$'s, and $w_i^*$'s stay clear.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $i$ | A unit — typically a city, trainer, or (in panel data) an individual. |
+> | $t$ | A time period (e.g., month, year). |
+> | $Y_{it}$ | Outcome for unit $i$ in period $t$. |
+> | $D_{it}$ | "Is unit $i$ treated at time $t$?" Treatment indicator that can turn on and off. |
+> | pre / post | Periods before / after treatment begins. |
+> | treated / control | Units that eventually get treated / that never do. |
+> | $\bar{Y}_{1,\text{post}}$, $\bar{Y}_{0,\text{post}}$, etc. | Group-period means. Subscripts are (treated/control, pre/post). |
+> | $\hat{\tau}_{DiD} = (\bar{Y}_{1,\text{post}} - \bar{Y}_{1,\text{pre}}) - (\bar{Y}_{0,\text{post}} - \bar{Y}_{0,\text{pre}})$ | The classic 2×2 DiD estimate. "Treated change minus control change." |
+> | parallel trends | "In the *absence* of treatment, treated and control would have moved in parallel." Core DiD assumption — untestable but defensible via pre-trends. |
+> | $\alpha_i$ | Unit fixed effect — "everything about unit $i$ that doesn't change over time." |
+> | $\lambda_t$ | Time fixed effect — "everything about time $t$ that affects all units equally." |
+> | TWFE | Two-Way Fixed Effects: the regression $Y_{it} = \alpha_i + \lambda_t + \tau D_{it} + \epsilon_{it}$. |
+> | $g$ | A treatment cohort (e.g., "units treated starting in month $g$"). |
+> | $ATT(g, t)$ | The average treatment effect for cohort $g$ at time $t$. Callaway-Sant'Anna's building block. |
+> | **"forbidden comparison"** | When TWFE uses already-treated units as controls for later-treated ones — the bug behind staggered DiD bias. |
+> | Goodman-Bacon decomposition | Unpacks TWFE into a weighted average of 2×2 DiD's; reveals where bad comparisons enter. |
+> | Callaway-Sant'Anna | A modern estimator that computes $ATT(g, t)$ cleanly, avoiding forbidden comparisons. |
+> | $w_i^*$ | Synthetic control weights — nonnegative and summing to 1 — used to build a weighted counterfactual from donor units. |
+> | donor pool | The set of candidate control units used to build the synthetic control. |
+> | placebo test (SC) | Applying the same SC recipe to *untreated* donors and seeing how big the "effect" is by chance. |
+>
+> A useful mantra: **DiD estimators kill two kinds of bias** (time-invariant unit differences and unit-invariant time shocks) **but cannot kill a bias that moves with treatment timing**.
 
 ## 7.1 Difference-in-Differences: The Classic 2x2 Design
 
@@ -857,6 +911,66 @@ Team Rocket briefly occupied Celadon City's Game Corner in Period 10, causing ec
 - **Roth, J., Sant'Anna, P. H. C., Bilinski, A., and Poe, J.** (2023). "What's Trending in Difference-in-Differences? A Synthesis of the Recent Econometrics Literature." *Journal of Econometrics*, 235(2), 2218--2244. An excellent survey of the modern DiD revolution.
 
 - **Rambachan, A. and Roth, J.** (2023). "A More Credible Approach to Parallel Trends." *Review of Economic Studies*, 90(5), 2555--2591. Sensitivity analysis for violations of parallel trends.
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch07_saffron_city.ipynb` turns the Shadow Surge story into a full DiD and synthetic control pipeline. Before you earn the Marsh Badge, you should be comfortable doing the following end-to-end:
+
+1. **Compute the 2×2 DiD by hand.** From a 2-city, 2-period dataset, compute the four group-period means, take the double difference, and confirm you get the same number from an interaction regression $Y \sim \text{Treat} + \text{Post} + \text{Treat}\times\text{Post}$.
+
+2. **Fit a two-way fixed effects regression.** Use `linearmodels.PanelOLS` (or equivalent) and extract the treatment coefficient and clustered standard errors.
+
+3. **Plot the parallel trends diagram.** Overlay observed treated/control means over time with the implied counterfactual dashed line. This plot is the single best visual check of parallel trends.
+
+4. **Run an event study.** For staggered treatment, estimate leads and lags around the event and plot them. Verify that pre-treatment leads are close to zero (pre-trends test) and use post-treatment coefficients as dynamic treatment effects.
+
+5. **Reproduce the "forbidden comparison" bug.** Simulate a staggered adoption dataset where later-treated units use already-treated units as controls. Compare naive TWFE against Callaway-Sant'Anna and show that TWFE is biased when effects are heterogeneous across cohorts.
+
+6. **Do a Goodman-Bacon decomposition.** Use `bacondecomp` (or similar) to break TWFE into its component 2×2 comparisons. Identify any forbidden comparisons by weight.
+
+7. **Implement Callaway-Sant'Anna.** Use `differences` (or `csdid`) to estimate $ATT(g, t)$ for each cohort-period and aggregate into overall, group-specific, and event-study summaries.
+
+8. **Build a synthetic control.** For Saffron, construct weights $w_i^*$ over donor cities that match pre-treatment outcomes. Plot the actual vs. synthetic path, mark treatment time, and compute the gap.
+
+9. **Run placebo-in-space tests.** Re-run the SC pipeline on each donor city as if it were treated. Compare the "real" treatment effect against the distribution of placebo effects to get a non-parametric p-value.
+
+10. **Complete the Trainer Challenge Exercises** — (a) a full 2×2 DiD, (b) an event study with pre-trends test, (c) a Callaway-Sant'Anna vs. TWFE comparison on a biased DGP, and (d) a synthetic control with placebo inference.
+
+---
+
+## Check Your Understanding
+
+Before facing Sabrina, run through this checklist. DiD is one of the most commonly misused methods in applied work — fluency here is not optional.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- Write the 2×2 DiD estimator in plain-English terms: "treated change minus control change."
+- State the parallel trends assumption in one sentence. Is it testable? What is a *pre-trends* check, and what is it actually testing?
+- Why does DiD eliminate time-invariant unit differences and common time shocks, but not shocks that hit only the treated group at the treatment time?
+- Write the TWFE regression $Y_{it} = \alpha_i + \lambda_t + \tau D_{it} + \epsilon_{it}$ and explain what each fixed effect absorbs.
+- Under what conditions does TWFE recover a causal effect? Under what conditions does it fail?
+- Explain the "forbidden comparison" problem in staggered DiD. Why does using already-treated units as controls cause bias?
+- What does the Goodman-Bacon decomposition tell you, and how do you use it diagnostically?
+- What does Callaway-Sant'Anna estimate? How is its building block $ATT(g, t)$ different from the TWFE $\hat{\tau}$?
+- What is an event study, and how does it differ from a single-coefficient DiD?
+- What is the synthetic control method? What exactly are the weights $w_i^*$ trying to match?
+- How do you do inference for synthetic control when there's only one treated unit? (Permutation / placebo tests.)
+- When should you reach for DiD versus synthetic control? What do you need for each?
+
+**Tasks you should be able to perform in code:**
+
+- Compute 2×2 DiD both from group means and via an interaction regression; verify they agree.
+- Fit TWFE with clustered standard errors on a panel dataset.
+- Produce an event study plot with pre-period leads and post-period lags.
+- Simulate staggered adoption with heterogeneous effects and confirm TWFE is biased.
+- Run Callaway-Sant'Anna (`differences` / `csdid`) and aggregate $ATT(g, t)$ into overall and dynamic effects.
+- Do a Goodman-Bacon decomposition and interpret the weights.
+- Construct synthetic control weights, plot the gap, and run placebo-in-space inference.
+- Compute a pre-trends test and know when to fail it.
+
+Do all this and the Marsh Badge is yours.
 
 ---
 

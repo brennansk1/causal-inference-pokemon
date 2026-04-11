@@ -1,9 +1,9 @@
 # Chapter 3: Cerulean City — Observational Studies & Graphical Models
 
 <!-- FIG-CH03-MISTY -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/misty.png" alt="Misty, Cerulean Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Misty, Cerulean Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/misty.png" alt="Misty, Cerulean Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Misty, Cerulean Gym Leader</figcaption>
 </figure>
 
 
@@ -353,6 +353,31 @@ Then we should **not condition** on starter type, because that would block part 
 ---
 
 ## 3.5 Directed Acyclic Graphs (DAGs)
+
+> **Notation at a Glance: Reading DAGs and OVB Formulas**
+>
+> From this section on, the chapter mixes graph-theory vocabulary with regression notation. Keep this sheet nearby.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $\mathcal{G} = (V, E)$ | A DAG. $V$ = nodes (variables), $E$ = arrows (direct causal links). |
+> | $V_i \to V_j$ | "$V_i$ directly causes $V_j$" — moving $V_i$ changes $V_j$ holding everything else fixed. |
+> | $\text{pa}(V_j)$ | The **parents** of $V_j$: every variable with an arrow *into* $V_j$. |
+> | descendant / ancestor | "Downstream" / "upstream" of a node via directed arrows. |
+> | $U$ (dashed) | An *unobserved* variable — we know it exists but can't measure it. |
+> | $D$ | Treatment (e.g., cave training, 0/1). |
+> | $Y$ | Outcome (e.g., badges). |
+> | $Z, X$ | Covariates — things we measured that might confound or mediate. |
+> | $\tau$ | The *true* causal effect of $D$ on $Y$. |
+> | $\hat{\tau}$ | Our data-derived estimate of $\tau$. |
+> | $\gamma$ | The effect of the omitted variable $Z$ on $Y$ (the "outcome side" of OVB). |
+> | $\delta$ | The relationship between the omitted variable $Z$ and the treatment $D$ (the "treatment side" of OVB). |
+> | $\gamma \cdot \delta$ | Omitted Variable Bias: the product of the two "legs" of the confounding path. Positive = overestimate, negative = underestimate. |
+> | $A \perp\!\!\!\perp B \mid C$ | "$A$ is independent of $B$ once we know $C$" — d-separation's plain-English goal. |
+> | backdoor path | A path from $D$ to $Y$ that starts with an arrow *into* $D$ — i.e., a confounding route. |
+> | backdoor criterion | "Block every backdoor path without conditioning on a descendant of $D$." |
+>
+> When a definition feels abstract, trace it on Bill's wall diagram with your finger until the symbols become arrows in your head.
 
 You leave the Cerulean Gym and walk east along Route 25 toward the Sea Cottage, where Bill — Kanto's most eccentric Pokemon researcher — lives and works. You need his help. Misty's data problems (confounding, selection bias, Simpson's paradox) all hinge on understanding the **causal structure** underlying the data. Bill, you've heard, has spent years mapping exactly that.
 
@@ -1057,6 +1082,57 @@ Consider the DAG: $Z \rightarrow X \rightarrow Y$, $Z \rightarrow Y$, $U \righta
 - **Spirtes, P., Glymour, C., & Scheines, R. (2000).** *Causation, Prediction, and Search* (2nd ed.). MIT Press. — The foundational text on causal discovery — learning DAGs from data. Introduces the PC algorithm and the faithfulness condition.
 
 - **Greenland, S., Pearl, J., & Robins, J. M. (1999).** Causal diagrams for epidemiologic research. *Epidemiology*, 10(1), 37-48. — The landmark paper that introduced DAGs to epidemiology. Clear, practical, and still highly relevant.
+
+---
+
+## Skills to Practice in the Notebook
+
+The `notebooks/ch03_cerulean_city.ipynb` notebook turns DAGs from wall art into running code. Before you claim the Cascade Badge, you should be able to do the following fluently:
+
+1. **Build a DAG in code.** Using `networkx` (or the provided `kanto_dag` helper), represent a DAG as nodes + directed edges. Add, remove, and query parents/children/ancestors/descendants programmatically. If you can't construct a DAG in five lines, go back to Section 3.5.
+
+2. **Simulate data from a known DAG.** Write a function that takes a DAG specification (with linear coefficients) and returns a dataframe of $n$ observations consistent with it. This is how you will stress-test every estimator in the rest of the book — you *must* be able to generate data where the truth is known.
+
+3. **Demonstrate OVB numerically.** Simulate data from the Kanto Trainer DAG. Fit the "short" regression (Badges ~ CaveTraining) and the "long" regression (Badges ~ CaveTraining + Experience). Show that the short regression's coefficient equals $\tau + \gamma\cdot\delta$, matching the OVB formula.
+
+4. **Reproduce Simpson's paradox.** Generate (or use the provided) cave-training dataset where the overall effect flips sign when you split by starter type. Compute the aggregated and stratum-specific means and explain which comparison is causal.
+
+5. **Verify d-separation on small DAGs.** For a fork, chain, and collider, compute sample correlations in a simulated dataset and verify that conditioning on the middle node (1) removes the association for forks and chains and (2) *creates* association for colliders. This is the "collider bias experiment" — everyone should see it with their own eyes once.
+
+6. **Apply the backdoor criterion.** Given a DAG, enumerate all paths from $D$ to $Y$, classify each as causal or backdoor, and find a minimal adjustment set that blocks every backdoor path without conditioning on a descendant of $D$. Use `dagitty` (via `pydagitty`) or the provided utility to cross-check your answer.
+
+7. **Complete the Trainer Challenge Exercises.** The notebook's challenges walk you through: (a) identifying confounders vs. mediators vs. colliders in a mystery DAG, (b) computing adjustment sets for multiple candidate estimands, and (c) demonstrating Berkson's paradox in simulation.
+
+---
+
+## Check Your Understanding
+
+Before boarding the S.S. Anne, run this gauntlet. Every concept here will be assumed when Chapter 4 builds matching estimators.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- What is a DAG? What do the arrows mean, and what does a *missing* arrow assert?
+- Define confounder, mediator, and collider in terms of arrows. Why is conditioning on a confounder *required* but conditioning on a mediator *forbidden*?
+- State the OVB formula $\text{Bias} = \gamma \cdot \delta$ and explain what each factor represents in words.
+- What is a backdoor path? Give a plain-English explanation of *why* backdoor paths create spurious associations.
+- State the backdoor criterion. Why is the "no descendants of $D$" clause in there?
+- Describe the three elemental structures (fork, chain, collider). For each, say whether conditioning on the middle node opens or closes the path.
+- Explain Simpson's paradox in terms of a DAG. Which comparison (aggregated or stratified) is the causal one, and *why*?
+- Explain Berkson's paradox using a selection-into-sample DAG. What node is the collider, and what spurious correlation does it create?
+- State d-separation informally. When does d-separation imply conditional independence in the data?
+- Why is a *missing* arrow a stronger assumption than a present arrow?
+- What is the frontdoor criterion, and when would you use it instead of the backdoor criterion?
+
+**Tasks you should be able to perform in code:**
+
+- Represent a DAG, query its parents/children/ancestors/descendants, and list all paths between two nodes.
+- Simulate data from a user-specified DAG with linear structural equations.
+- Fit short and long regressions on simulated data and verify that their difference matches $\gamma \cdot \delta$ to within Monte Carlo noise.
+- Reproduce Simpson's paradox — both the aggregated and the stratified comparisons — and explain which is causal given the DAG.
+- Check a proposed adjustment set against the backdoor criterion programmatically (by enumerating paths).
+- Run the collider-bias experiment: generate two independent variables, create a third as their sum (the collider), subset on the collider, and observe the induced (spurious) correlation.
+
+If you can do every one of these, the Cascade Badge is yours.
 
 ---
 

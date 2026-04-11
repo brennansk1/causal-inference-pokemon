@@ -1,9 +1,9 @@
 # Chapter 1: Pallet Town --- What Is Causal Inference?
 
 <!-- FIG-CH01-OAK -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/oak.png" alt="Professor Oak" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Professor Oak</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/oak.png" alt="Professor Oak" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Professor Oak</figcaption>
 </figure>
 
 
@@ -31,6 +31,24 @@
 ## 1.1 Why Causation Matters More Than Correlation
 
 ### The Starter Debate
+
+<!-- FIG-CH01-STARTERS -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/1.png" alt="Bulbasaur" style="width:120px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#001 Bulbasaur</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/4.png" alt="Charmander" style="width:120px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#004 Charmander</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/7.png" alt="Squirtle" style="width:120px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#007 Squirtle</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">The three Kanto starters — the choice at the heart of this chapter's causal question.</p>
+
 
 Every year, a new cohort of trainers walks into Professor Oak's lab and faces the same choice: Bulbasaur, Charmander, or Squirtle. And every year, the same debate rages in the streets of Pallet Town. One camp cites league records showing that Water-type starters are associated with higher badge counts. Another camp points to Championship rosters dominated by Fire-type starters. Both sides wave data. Neither side agrees.
 
@@ -205,6 +223,26 @@ These potential outcomes exist conceptually for every trainer, regardless of whe
 > The notation $Y_i(d)$ for $d \in \{0,1\}$ denotes the outcome that unit $i$ would realize if assigned treatment status $d$. Critically, both $Y_i(1)$ and $Y_i(0)$ are defined for every unit $i$, but at most one of them is ever observed. The pair $(Y_i(0), Y_i(1))$ is sometimes called the **potential outcome pair** for unit $i$.
 >
 > Formally, a potential outcome is a mapping from the treatment space to the outcome space: for each unit $i$, $Y_i : \{0, 1\} \to \mathcal{Y}$, where $\mathcal{Y}$ is the set of possible outcomes (e.g., $\{0, 1, 2, \ldots, 8\}$ for Gym Badges in Kanto).
+
+> **Notation Cheat Sheet: Reading Potential Outcomes in Plain English**
+>
+> Every symbol in this chapter has a plain-language translation. Keep this sheet nearby the first few times you read a causal formula — in a month it will feel natural.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $i$ | A single trainer (the "unit"). Think "trainer number $i$." |
+> | $N$ | How many trainers are in our study. |
+> | $D_i \in \{0, 1\}$ | Did trainer $i$ actually get the treatment? `1` = yes, `0` = no. |
+> | $Y_i^{\text{obs}}$ | The outcome we *actually saw* for trainer $i$ (e.g., they earned 6 badges). |
+> | $Y_i(1)$ | The outcome trainer $i$ **would have gotten** under treatment — whether or not they were treated. |
+> | $Y_i(0)$ | The outcome trainer $i$ **would have gotten** without treatment — again, regardless of what happened. |
+> | $\tau_i = Y_i(1) - Y_i(0)$ | Trainer $i$'s personal effect: "how many extra badges treatment gave *this specific trainer*." |
+> | $E[\cdot]$ | "The average of …", taken over the whole population (or a group, if we condition). |
+> | $E[Y_i(1) - Y_i(0)]$ | The ATE — the average personal effect across everyone. |
+> | $E[Y_i(1) - Y_i(0) \mid D_i = 1]$ | The ATT — the average personal effect, but only among trainers who actually took the treatment. |
+> | $(Y_i(0), Y_i(1)) \perp\!\!\!\perp D_i$ | "Treatment assignment is independent of the potential outcomes." Translation: the type of trainer who gets treated looks just like the type who doesn't. |
+>
+> If any line in the chapter feels opaque, rewrite it using the right-hand column until the sentence sounds like normal English. That is not a shortcut — that is the real skill.
 
 ### Individual Treatment Effect
 
@@ -687,6 +725,55 @@ This chapter introduced the foundational concepts of causal inference. Here are 
 - **Lewis, D.** (1973). *Counterfactuals*. Blackwell. The philosophical foundation for possible worlds semantics and counterfactual reasoning.
 
 - **Morgan, S. L., & Winship, C.** (2015). *Counterfactuals and Causal Inference: Methods and Principles for Social Research* (2nd ed.). Cambridge University Press. An excellent bridge between sociological applications and the formal potential outcomes framework.
+
+---
+
+## Skills to Practice in the Notebook
+
+The companion notebook `notebooks/ch01_pallet_town.ipynb` is where the ideas above become muscle memory. Before moving on to Pewter City, you should be able to do the following without looking back at the chapter:
+
+1. **Load the Kanto Trainer dataset and explore it.** Import `trainers` via `load_trainers()`, inspect its columns, and compute simple group means (for example, average badges by `starter_type`). This is the baseline you will repeatedly compare against causal estimates.
+
+2. **Reproduce "Blue's mistake" numerically.** Compute the naive difference-in-means between two groups (e.g., Squirtle-pickers vs. Charmander-pickers) and then show, using the same dataset, that the groups differ in at least one pre-treatment covariate (experience, wealth, strategy score). Being able to *display* confounding in a two-panel plot is the concrete skill.
+
+3. **Build a potential outcomes table by hand.** Given simulated $Y_i(0)$ and $Y_i(1)$, write code that computes ATE, ATT, ATC, and the naive estimator, and then verifies the selection-bias decomposition $\hat{\Delta}^{\text{naive}} = \text{ATT} + \text{Selection Bias}$ numerically. If your code's ATT plus selection bias does not exactly equal the naive estimate, something is wrong.
+
+4. **Use the `confounder_slider` widget.** Narrow the slider until you are comparing only trainers with nearly identical experience levels. Watch what happens to the naive estimate. You should be able to explain in one sentence *why* it changes.
+
+5. **Complete the three Challenge Exercises in the notebook.** These are the gatekeeper tasks — if you can finish them, you are ready for Chapter 2.
+   - **Challenge 1:** Compute ATE and selection bias on a filtered subset (Pewter + Cerulean trainers).
+   - **Challenge 2:** Identify a confounder between `cave_training` and `badges`, and explain why it biases the naive estimate.
+   - **Challenge 3:** Write `simulate_and_estimate(n, true_ate, confounding_strength, seed)` and plot how bias grows with confounding strength.
+
+You do not need to get these perfect on the first attempt. You *do* need to understand *why* your answer is right when you're done.
+
+---
+
+## Check Your Understanding
+
+Before you leave Pallet Town, walk through these. If you stumble on more than a couple, spend another pass with the chapter and notebook — the rest of the book is built on top of this foundation.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- What is the difference between correlation and causation? Why does observing the first not justify claiming the second?
+- State the Fundamental Problem of Causal Inference in one sentence. Why is it a *logical* impossibility, not a practical one?
+- Define $Y_i(1)$, $Y_i(0)$, $D_i$, and $Y_i^{\text{obs}}$. Which of these can you see in a dataset? Which cannot?
+- Write the switching equation $Y_i^{\text{obs}} = D_i \cdot Y_i(1) + (1-D_i) \cdot Y_i(0)$ and explain what each term "selects" for.
+- State the ATE, ATT, and ATC formulas and explain in plain English which population each one refers to.
+- Write the selection-bias decomposition and point to which term is the *causal* part and which term is the *bias* part.
+- What does it mean for treatment to be *ignorable* given $X$? Give a Pokemon-themed example where ignorability holds and one where it fails.
+- Name the four core assumptions (Ignorability, Positivity, Consistency, SUTVA) and give one way each could break in a Kanto context.
+- On Pearl's Ladder, classify: (a) "What fraction of Charmander trainers won Brock's gym?" (b) "If we forced every trainer to use Charmander, what would the win rate be?" (c) "Ash won with Charmander — would he have won with Bulbasaur?"
+
+**Tasks you should be able to perform in code:**
+
+- Load `trainers` and compute a group-mean comparison (naive estimator) for any pair of groups.
+- Simulate a dataset with a known confounder and a known true ATE, then show numerically that the naive estimator is biased.
+- Given a potential outcomes table (with both $Y(1)$ and $Y(0)$), compute ATE, ATT, ATC, naive estimator, and selection bias — and verify the decomposition identity.
+- Plot how bias changes as confounding strength changes (this is the punchline of Challenge 3 and will matter again in Chapter 3).
+- Take any equation from this chapter and rewrite it in plain English using the Notation Cheat Sheet above.
+
+If you can do all of this, you have everything you need for Chapter 2 — where we will learn the one trick that makes the naive estimator *unbiased*: randomization.
 
 ---
 

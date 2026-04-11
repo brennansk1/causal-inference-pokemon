@@ -1,9 +1,34 @@
 # Chapter 4: Vermilion City — Matching & Subclassification
 
+<!-- FIG-CH04-ELECMONS -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/25.png" alt="Pikachu" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#025 Pikachu</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/26.png" alt="Raichu" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#026 Raichu</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/100.png" alt="Voltorb" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#100 Voltorb</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">Vermilion's Electric-type roster — treatment groups we'll try to match.</p>
+
+
+<!-- FIG-CH04-ELEC -->
+<figure style="margin:1em auto; max-width:110px; text-align:center;">
+<img src="../../assets/sprites/types/electric.png" alt="Electric-type — Lt. Surge's specialty" style="width:90px; display:block; margin:0 auto;">
+<figcaption style="font-size:0.85em;">Electric-type — Lt. Surge's specialty</figcaption>
+</figure>
+
+
 <!-- FIG-CH04-SURGE -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/surge.png" alt="Lt. Surge, Vermilion Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Lt. Surge, Vermilion Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/surge.png" alt="Lt. Surge, Vermilion Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Lt. Surge, Vermilion Gym Leader</figcaption>
 </figure>
 
 
@@ -186,6 +211,28 @@ The researcher must navigate this tradeoff thoughtfully. CEM's key advantage is 
 ---
 
 ## 4.3 Distance-Based Matching
+
+> **Notation at a Glance: Matching and Propensity Scores**
+>
+> The matching literature has a lot of decorated $X$'s and scripty $\mathcal{M}$'s. Here is the plain-English decoder.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $X_i$ | The vector of covariates for trainer $i$ — e.g., `[badges, team_level, experience]`. |
+> | $X_i - X_j$ | How far apart two trainers are on each covariate, coordinate by coordinate. |
+> | $\Sigma$ | The covariance matrix of $X$ in the full sample — encodes "how much each covariate varies" and "which pairs move together." |
+> | $\Sigma^{-1}$ | Its inverse — used to *rescale* differences so every covariate matters on a comparable footing. |
+> | $d_M(X_i, X_j)$ | Mahalanobis distance — how "similar" trainers $i$ and $j$ are, after rescaling. Small = good match. |
+> | $e(X_i) = P(D_i = 1 \mid X_i)$ | The **propensity score** — the probability that a trainer with covariates $X_i$ ends up treated. A single number summarizing $X_i$'s effect on assignment. |
+> | $e(X_i) = 0.5$ | "Given this trainer's covariates, treatment is a coin flip." The sweet spot for matching. |
+> | $e(X_i) \approx 0$ or $1$ | "Essentially never/always treated" — these units hurt positivity and should be flagged. |
+> | $\mathcal{M}(i)$ | The set of control units that trainer $i$ can be matched to (after applying a caliper). |
+> | caliper $c$ | Maximum distance allowed for a match. Tighter $c$ → better matches, smaller sample. |
+> | $w_i$ | Weight assigned to observation $i$ (e.g., 1 for matched, 0 for discarded; or a subclass weight). |
+> | ATT | Average Treatment effect on the Treated — the estimand matching typically targets. |
+> | SMD | Standardized Mean Difference — the balance diagnostic: $|\bar{X}_T - \bar{X}_C| / s_{\text{pooled}}$. Target < 0.1. |
+>
+> Keep in mind: the propensity score $e(X)$ is *not* a prediction we care about. It is a **balancing score** — a tool for making treated and control groups look alike. Its accuracy matters less than the balance it produces.
 
 Exact matching (even coarsened) becomes unwieldy as the number of covariates grows. An alternative is to define a *distance metric* between units and match each treated unit to its nearest control neighbor in the covariate space.
 
@@ -829,6 +876,58 @@ Using the matched sample from Exercise 4.2 (or the full matched S.S. Anne sample
 - **Cochran, W. G. (1968).** "The Effectiveness of Adjustment by Subclassification in Removing Bias in Observational Studies." *Biometrics*, 24(2), 295-313. The classic result that five strata remove approximately 90% of bias.
 
 - **Austin, P. C. (2011).** "An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies." *Multivariate Behavioral Research*, 46(3), 399-424. An accessible introduction to propensity score methods for applied researchers.
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch04_vermilion_city.ipynb` is where matching stops being a diagram and becomes an estimator. Complete each of the following to claim the Thunder Badge:
+
+1. **Implement exact matching from scratch.** Given a dataset with a discrete covariate (e.g., hometown), pair each treated unit with controls that share the same value. Compute the matched ATT as the mean of within-pair differences. No library — do it in pandas first.
+
+2. **Compute Mahalanobis distances and do 1:1 nearest-neighbor matching.** Use `scipy.spatial.distance.mahalanobis` (or your own implementation) to find the closest control for each treated unit on a small set of covariates. Then pair outcomes and compute $\hat{\tau}_{ATT}$. Do this both *with* and *without* replacement and compare.
+
+3. **Estimate a propensity score.** Fit a logistic regression (or a gradient boosted classifier) for $P(D=1 \mid X)$. Plot overlap: histograms of $\hat{e}(X)$ for treated and control. Be able to *spot* positivity violations visually.
+
+4. **Do propensity score matching with a caliper.** Match each treated unit to its nearest control within a caliper of $0.2 \times \text{SD}(\text{logit}(\hat{e}))$. Count how many treated units are dropped. Compute the caliper-matched ATT.
+
+5. **Check balance before and after matching.** For every covariate, compute the standardized mean difference (SMD) in the raw data and in the matched sample. Plot a "love plot" (SMD before vs. after) and know what "success" looks like (all SMDs below 0.1).
+
+6. **Run subclassification / stratification.** Split the sample into 5 propensity-score bins. Within each bin, compute a treated-vs-control difference. Combine bin-level estimates into an overall ATE and ATT using the appropriate weights. Compare against the matched estimate.
+
+7. **Complete the Trainer Challenge Exercises.** The notebook walks you through: (a) rebuilding the Rosenbaum-Rubin balancing result in simulation, (b) showing how caliper width trades off bias vs. variance empirically, and (c) diagnosing a dataset where matching *fails* because positivity is violated.
+
+---
+
+## Check Your Understanding
+
+Before challenging Lt. Surge, work through these. Matching is the foundation for Chapter 5's regression adjustment and the weighting methods in Chapter 6 — do not move forward with gaps.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- Why do we match? What is the "counterfactual twin" intuition in one sentence?
+- State the ignorability assumption $(Y_i(0), Y_i(1)) \perp\!\!\!\perp D_i \mid X_i$ and say precisely what matching assumes and does not assume.
+- Why does the curse of dimensionality make exact matching on many covariates impractical?
+- Define the Mahalanobis distance and explain in plain English what the $\Sigma^{-1}$ factor *does* (why not just Euclidean distance?).
+- Define the propensity score $e(X) = P(D = 1 \mid X)$. Why is it a *balancing* score rather than a *prediction* score?
+- State the Rosenbaum-Rubin theorem in one sentence. What's the practical payoff?
+- What is positivity? Why do $e(X)$ values near 0 or 1 break matching?
+- Compare matching with replacement and without replacement. When does each win?
+- What does a caliper do, and what is the bias-variance tradeoff it controls?
+- What is the standardized mean difference (SMD), and what threshold flags "acceptable balance"?
+- Why does matching target the ATT rather than the ATE, and how would you adapt the method to estimate the ATE instead?
+- Name three ways matching can fail even when the code runs cleanly. (Hidden bias, poor overlap, model misspecification of $e(X)$, etc.)
+
+**Tasks you should be able to perform in code:**
+
+- Fit a propensity score model, plot the overlap histogram, and flag units with $\hat{e}(X) < 0.05$ or $> 0.95$.
+- Do 1:1 and $k$:1 nearest-neighbor matching (with and without replacement) using a Mahalanobis or propensity-score distance.
+- Compute the ATT from a matched sample and get a valid (Abadie-Imbens) standard error — or at least a bootstrap one.
+- Compute SMDs for every covariate, pre- and post-match, and draw the love plot.
+- Run propensity-score subclassification with $K$ bins and aggregate to ATT and ATE.
+- Spot and *report* a positivity violation in the data rather than silently ignoring it.
+
+Do all this and the Thunder Badge is yours.
 
 ---
 

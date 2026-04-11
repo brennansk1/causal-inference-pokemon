@@ -1,9 +1,34 @@
 # Chapter 5: Celadon City — Regression, Weighting, & Doubly Robust Methods
 
+<!-- FIG-CH05-GRASSMONS -->
+<div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; align-items:flex-end; margin:1.25em auto;">
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/43.png" alt="Oddish" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#043 Oddish</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/44.png" alt="Gloom" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#044 Gloom</figcaption>
+</figure>
+<figure style="margin:0; text-align:center;">
+<img src="../../assets/sprites/front/45.png" alt="Vileplume" style="width:105px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.8em;">#045 Vileplume</figcaption>
+</figure>
+</div>
+<p style="text-align:center; font-size:0.85em; color:#666; font-style:italic; margin:0.25em 0 1em;">Erika's Grass-type lineage — a reminder that regression can adjust for anything, if the DAG says so.</p>
+
+
+<!-- FIG-CH05-GRASS -->
+<figure style="margin:1em auto; max-width:110px; text-align:center;">
+<img src="../../assets/sprites/types/grass.png" alt="Grass-type — Erika's specialty" style="width:90px; display:block; margin:0 auto;">
+<figcaption style="font-size:0.85em;">Grass-type — Erika's specialty</figcaption>
+</figure>
+
+
 <!-- FIG-CH05-ERIKA -->
-<figure style="float:right; margin:0 0 12px 16px; max-width:140px;">
-<img src="../../assets/characters/erika.png" alt="Erika, Celadon Gym Leader" style="width:120px; display:block; image-rendering: pixelated;">
-<figcaption style="font-size:0.85em; text-align:center;">Erika, Celadon Gym Leader</figcaption>
+<figure style="margin:1.5em auto; max-width:160px; text-align:center;">
+<img src="../../assets/characters/erika.png" alt="Erika, Celadon Gym Leader" style="width:140px; display:block; margin:0 auto; image-rendering: pixelated;">
+<figcaption style="font-size:0.85em;">Erika, Celadon Gym Leader</figcaption>
 </figure>
 
 
@@ -369,6 +394,28 @@ When in doubt, draw the DAG first and apply the backdoor criterion.
 ---
 
 ## 5.4 Inverse Probability Weighting (IPW)
+
+> **Notation at a Glance: IPW and Doubly Robust Estimators**
+>
+> The rest of this chapter leans heavily on propensity weights and doubly robust corrections. Keep this next to you.
+>
+> | Symbol | Plain-English reading |
+> |:---|:---|
+> | $e(X_i) = P(D_i = 1 \mid X_i)$ | The **propensity score** — each trainer's probability of getting treated, given their observed covariates. |
+> | $\hat{e}(X_i)$ | What we *estimate* for $e(X_i)$ from a model (usually logistic regression). |
+> | $1 - e(X_i)$ | The matching "control side" probability — how likely this trainer was to end up in the control group. |
+> | $w_i = D_i/e(X_i) + (1-D_i)/(1-e(X_i))$ | The IPW weight — "how much should we upweight trainer $i$ to pretend treatment was random?" |
+> | $\hat{\tau}_{HT}$ | The Horvitz-Thompson estimator — unbiased but unstable when weights get huge. |
+> | $\hat{\tau}_{H}$ | The Hajek (normalized) estimator — slightly biased in finite samples but much stabler. |
+> | $m_d(X_i) = E[Y \mid X_i, D_i = d]$ | The **outcome model** — what we'd predict for trainer $i$ if treated ($d=1$) or control ($d=0$). |
+> | $\hat{m}_d(X_i)$ | The estimated outcome model (e.g., from OLS or a random forest). |
+> | $\hat{\tau}_{AIPW}$ | The augmented / doubly robust estimator — combines $\hat{e}$ and $\hat{m}$; works if *either* is correct. |
+> | $\epsilon_i$ | Regression residual: the part of $Y_i$ the model couldn't explain. |
+> | ATO | Average Treatment effect on the Overlap population — what overlap weights target. |
+> | trimming at $\alpha$ | "Drop anyone with $\hat{e}(X) \notin [\alpha, 1-\alpha]$." Changes the estimand to the trimmed population. |
+> | "doubly robust" | If *either* the outcome model $\hat{m}_d$ *or* the propensity model $\hat{e}$ is right, the estimator is still consistent. Not "double the guarantees" — more like "a safety net for whichever model you trust less." |
+>
+> The most important single insight: the propensity score is not a prediction you care about. It is a *reweighting device*. Its job is to make the treated and control populations look exchangeable, not to predict treatment assignment accurately.
 
 ### 5.4.1 The Game Corner Problem
 
@@ -827,6 +874,56 @@ Using the companion notebook (`ch05_celadon_city.ipynb`) and the `kanto_trainers
 - **Lunceford, J. K. & Davidian, M.** (2004). "Stratification and Weighting Via the Propensity Score in Estimation of Causal Treatment Effects: A Comparative Study." *Statistics in Medicine*, 23(19), 2937-2960. An accessible review comparing propensity score methods, including regression, stratification, IPW, and doubly robust estimation.
 
 - **Bang, H. & Robins, J. M.** (2005). "Doubly Robust Estimation in Missing Data and Causal Inference Models." *Biometrics*, 61(4), 962-973. A clear exposition of doubly robust estimators with practical guidance on implementation.
+
+---
+
+## Skills to Practice in the Notebook
+
+The notebook `notebooks/ch05_celadon_city.ipynb` is where the three estimators (regression, IPW, and doubly robust) become yours to compare and contrast. Before claiming the Rainbow Badge, you should be able to do the following fluently:
+
+1. **Fit a causal regression.** On the Department Store dataset, regress the outcome on treatment and covariates. Extract the treatment coefficient, its standard error, and a 95% CI. Then refit with a polynomial/interaction specification and see how the estimate moves. Know which specification changes you're allowed to try.
+
+2. **Use the Frisch-Waugh-Lovell theorem in code.** Residualize $D$ and $Y$ against $X$ separately, regress the residuals, and verify the coefficient matches the full regression's treatment coefficient. This is the best single exercise for internalizing what "controlling for $X$" actually does.
+
+3. **Run a signed OVB analysis.** For a simulated dataset where you know the true confounder, omit it intentionally and confirm the direction of bias matches $\text{sign}(\gamma) \cdot \text{sign}(\delta)$.
+
+4. **Demonstrate the "bad control" failure.** Simulate a dataset with a post-treatment mediator. Fit a regression that (a) controls for the mediator and (b) does not. Show that (a) is biased toward zero and (b) recovers the truth. Be able to explain exactly why the "good" variable breaks things.
+
+5. **Estimate propensity scores and compute IPW.** Fit `e_hat` via logistic regression, compute both the Horvitz-Thompson and Hajek estimates, and inspect the weight distribution. Flag any weights above some threshold (e.g., 10) and explain what would happen if you trimmed or Winsorized them.
+
+6. **Build an augmented IPW / doubly robust estimator.** Combine a fitted outcome model $\hat{m}_d(X)$ and a propensity model $\hat{e}(X)$ into the AIPW formula. Then *break* one of the two models on purpose — misspecify the outcome model with a wrong functional form — and verify the AIPW estimate is still close to the truth. This is the double-robustness demo.
+
+7. **Complete the Trainer Challenge Exercises.** The notebook walks through: (a) an OVB simulation matching the chapter, (b) a bad-control trap on the `team_level` mediator, (c) an IPW vs. regression shootout on a confounded dataset, and (d) a doubly robust stress test.
+
+---
+
+## Check Your Understanding
+
+Before earning the Rainbow Badge, make sure these are solid. Chapters 6–8 all assume fluency with the three Celadon tools.
+
+**Questions you should be able to answer out loud, without notes:**
+
+- State the causal regression model $Y_i = \alpha + \tau D_i + X_i'\beta + \epsilon_i$. What does $\tau$ represent *causally*, and what assumption must hold for OLS to recover it?
+- What is conditional mean independence, and how does it differ from full conditional independence?
+- State the Frisch-Waugh-Lovell theorem informally. What does it tell you about what a regression coefficient "really" is?
+- Define a "bad control" and explain, via a DAG, why controlling for a post-treatment variable biases the estimate.
+- Write the Horvitz-Thompson and Hajek IPW estimators. Why is Hajek preferred in practice?
+- What is the "pseudo-population" interpretation of IPW? Why does reweighting by $1/e(X)$ make the treated group look like the full population?
+- What is the extreme weight problem? Name three ways to address it (trimming, truncation, stabilization, overlap weights) and state the bias-variance tradeoff for each.
+- State the double robustness property. What exactly does the AIPW estimator guarantee? When does the guarantee *fail*?
+- In what sense are regression, IPW, and AIPW all estimating the same thing? In what sense are they different?
+- Give one scenario where you would prefer regression, one where you would prefer IPW, and one where AIPW is clearly the winner.
+
+**Tasks you should be able to perform in code:**
+
+- Fit an OLS regression, extract a treatment coefficient with robust standard errors, and compute a 95% CI.
+- Run the FWL residualization and verify numerically that the two-step regression reproduces the full regression's coefficient.
+- Fit a logistic propensity score model, compute HT and Hajek IPW estimates, and plot the weight distribution.
+- Apply trimming / truncation / stabilized weights and report how the ATE estimate moves.
+- Implement the AIPW formula from $\hat{m}_d(X)$ and $\hat{e}(X)$, and verify double robustness by breaking one model at a time.
+- Run a bootstrap or sandwich variance estimator for any of the above and produce a defensible 95% CI.
+
+Nail these and the Rainbow Badge is yours.
 
 ---
 

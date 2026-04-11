@@ -75,7 +75,8 @@ CHARACTERS = {
 }
 
 # Nurse Joy is not in the Gen 1 game graphics (she debuted as a generic NPC),
-# so we keep the SVG fallback for her.
+# so her portrait ships as `characters/nurse_joy.webp` (sourced manually) rather
+# than being downloaded from pret/pokered.
 
 # ---------------------------------------------------------------------------
 # Kanto map (pret/pokered town map)
