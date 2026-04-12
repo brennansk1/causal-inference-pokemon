@@ -40,6 +40,13 @@ textbook/figures/*.pdf
 # Note: we DO track data/raw/ for convenience, but you can regenerate with:
 #   python data/dgp/generate_all.py
 
+# Audiobook generated output (regenerate with: cd audiobook && python generate_audiobook.py)
+audiobook/output/wav/
+audiobook/output/mp3/
+audiobook/output/progress.json
+audiobook/output/manifest.json
+audiobook/output/full_audiobook.mp3
+
 # Secrets
 .env
 *.key
